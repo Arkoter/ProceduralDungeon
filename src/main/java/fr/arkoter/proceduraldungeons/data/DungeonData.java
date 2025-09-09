@@ -28,7 +28,12 @@ public class DungeonData {
 
     public void loadData() {
         if (!dataFile.exists()) {
-            plugin.saveResource("dungeons.yml", false);
+            try {
+                dataFile.getParentFile().mkdirs();
+                dataFile.createNewFile();
+            } catch (IOException e) {
+                plugin.getLogger().severe("Impossible de créer le fichier dungeons.yml: " + e.getMessage());
+            }
         }
 
         config = YamlConfiguration.loadConfiguration(dataFile);
@@ -131,21 +136,30 @@ public class DungeonData {
             }
         }
 
-// Charger les pièges
-        List<Map<?, ?>> trapData = section.getMapList("traps");
-        for (Map<?, ?> trapMap : trapData) {
-            String trapLocStr = (String) trapMap.get("location");
-            int trapType = (Integer) trapMap.get("type");
+        // Charger les pièges - CORRECTION ICI
+        List<?> trapDataList = section.getList("traps");
+        if (trapDataList != null) {
+            for (Object trapObj : trapDataList) {
+                if (trapObj instanceof Map) {
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> trapMap = (Map<String, Object>) trapObj;
 
-            // Correction de la ligne 139 :
-            Object activatedObj = trapMap.getOrDefault("activated", false);
-            boolean activated = activatedObj instanceof Boolean ? (Boolean) activatedObj : false;
+                    String trapLocStr = (String) trapMap.get("location");
+                    Object trapTypeObj = trapMap.get("type");
+                    Object activatedObj = trapMap.get("activated");
 
-            Location trapLoc = LocationUtils.stringToLocation(trapLocStr);
-            if (trapLoc != null) {
-                Dungeon.Trap trap = new Dungeon.Trap(trapLoc, trapType);
-                trap.setActivated(activated);
-                dungeon.addTrap(trap);
+                    if (trapLocStr != null && trapTypeObj != null) {
+                        int trapType = trapTypeObj instanceof Integer ? (Integer) trapTypeObj : 0;
+                        boolean activated = activatedObj instanceof Boolean ? (Boolean) activatedObj : false;
+
+                        Location trapLoc = LocationUtils.stringToLocation(trapLocStr);
+                        if (trapLoc != null) {
+                            Dungeon.Trap trap = new Dungeon.Trap(trapLoc, trapType);
+                            trap.setActivated(activated);
+                            dungeon.addTrap(trap);
+                        }
+                    }
+                }
             }
         }
 
