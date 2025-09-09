@@ -131,11 +131,13 @@ public class DungeonData {
             }
         }
 
-        // Charger les pièges
+// Charger les pièges
         List<Map<?, ?>> trapData = section.getMapList("traps");
         for (Map<?, ?> trapMap : trapData) {
             String trapLocStr = (String) trapMap.get("location");
             int trapType = (Integer) trapMap.get("type");
+
+            // Correction de la ligne 139 :
             Object activatedObj = trapMap.getOrDefault("activated", false);
             boolean activated = activatedObj instanceof Boolean ? (Boolean) activatedObj : false;
 
