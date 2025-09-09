@@ -47,11 +47,6 @@ public class DungeonManager {
     // CRÉATION DE DONJONS
     // ================================
 
-    public void createDungeon(Player player, String name) {
-        createDungeon(player, name, plugin.getConfigManager().getDefaultSize(),
-                plugin.getConfigManager().getDefaultDifficulty());
-    }
-
     public void createDungeon(Player player, String name, int size, int difficulty) {
         if (dungeons.containsKey(name)) {
             player.sendMessage(MessageUtils.getMessage("messages.dungeon.already-exists", "{name}", name));
@@ -78,9 +73,14 @@ public class DungeonManager {
         }
 
         Location location = player.getLocation();
-        size = Math.max(plugin.getConfigManager().getMinDungeonSize(),
+
+        // Créer des variables final pour utilisation dans BukkitRunnable
+        final int finalSize = Math.max(plugin.getConfigManager().getMinDungeonSize(),
                 Math.min(size, plugin.getConfigManager().getMaxDungeonSize()));
-        difficulty = Math.max(1, Math.min(difficulty, plugin.getConfigManager().getMaxDifficulty()));
+        final int finalDifficulty = Math.max(1, Math.min(difficulty, plugin.getConfigManager().getMaxDifficulty()));
+        final String finalName = name;
+        final Player finalPlayer = player;
+        final UUID finalPlayerId = player.getUniqueId();
 
         player.sendMessage(MessageUtils.getMessage("messages.dungeon.creating", "{name}", name));
 
@@ -90,23 +90,23 @@ public class DungeonManager {
             public void run() {
                 long startTime = System.currentTimeMillis();
 
-                Dungeon dungeon = new Dungeon(name, location, size, difficulty);
+                Dungeon dungeon = new Dungeon(finalName, location, finalSize, finalDifficulty);
                 generateDungeonStructure(dungeon);
 
                 // Revenir au thread principal pour finaliser
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        dungeons.put(name, dungeon);
-                        dungeonOwners.put(name, player.getUniqueId());
+                        dungeons.put(finalName, dungeon);
+                        dungeonOwners.put(finalName, finalPlayerId);
                         plugin.getDungeonData().saveDungeon(dungeon);
 
                         long duration = System.currentTimeMillis() - startTime;
-                        player.sendMessage(MessageUtils.getMessage("messages.dungeon.created", "{name}", name));
-                        player.sendMessage(MessageUtils.getMessage("messages.dungeon.generation-complete",
+                        finalPlayer.sendMessage(MessageUtils.getMessage("messages.dungeon.created", "{name}", finalName));
+                        finalPlayer.sendMessage(MessageUtils.getMessage("messages.dungeon.generation-complete",
                                 "{time}", String.valueOf(duration)));
 
-                        plugin.logPerformance("Dungeon creation: " + name, startTime);
+                        plugin.logPerformance("Dungeon creation: " + finalName, startTime);
                     }
                 }.runTask(plugin);
             }
@@ -121,6 +121,12 @@ public class DungeonManager {
         }
 
         Location location = player.getLocation();
+
+        // Variables final pour BukkitRunnable
+        final Player finalPlayer = player;
+        final UUID finalPlayerId = player.getUniqueId();
+        final DungeonTemplate finalTemplate = template;
+
         player.sendMessage(MessageUtils.getMessage("messages.dungeon.creating",
                 "{name}", template.getName()));
 
@@ -129,24 +135,24 @@ public class DungeonManager {
             public void run() {
                 long startTime = System.currentTimeMillis();
 
-                Dungeon dungeon = new Dungeon(template.getName(), location,
-                        template.getSize(), template.getDifficulty());
-                generateCustomDungeonStructure(dungeon, template);
+                Dungeon dungeon = new Dungeon(finalTemplate.getName(), location,
+                        finalTemplate.getSize(), finalTemplate.getDifficulty());
+                generateCustomDungeonStructure(dungeon, finalTemplate);
 
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        dungeons.put(template.getName(), dungeon);
-                        dungeonOwners.put(template.getName(), player.getUniqueId());
+                        dungeons.put(finalTemplate.getName(), dungeon);
+                        dungeonOwners.put(finalTemplate.getName(), finalPlayerId);
                         plugin.getDungeonData().saveDungeon(dungeon);
 
                         long duration = System.currentTimeMillis() - startTime;
-                        player.sendMessage(MessageUtils.getMessage("messages.wizard.dungeon-created",
-                                "{name}", template.getName()));
-                        player.sendMessage(MessageUtils.getMessage("messages.dungeon.generation-complete",
+                        finalPlayer.sendMessage(MessageUtils.getMessage("messages.wizard.dungeon-created",
+                                "{name}", finalTemplate.getName()));
+                        finalPlayer.sendMessage(MessageUtils.getMessage("messages.dungeon.generation-complete",
                                 "{time}", String.valueOf(duration)));
 
-                        plugin.logPerformance("Custom dungeon creation: " + template.getName(), startTime);
+                        plugin.logPerformance("Custom dungeon creation: " + finalTemplate.getName(), startTime);
                     }
                 }.runTask(plugin);
             }
