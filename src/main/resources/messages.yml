@@ -1,0 +1,53 @@
+# Messages du plugin ProceduralDungeons
+
+messages:
+  prefix: "&8[&6ProceduralDungeons&8]&r "
+  only-players: "&cCette commande ne peut être exécutée que par un joueur !"
+  no-permission: "&cVous n'avez pas la permission d'utiliser cette commande !"
+  config-reloaded: "&aConfiguration rechargée avec succès !"
+
+  # Messages d'aide
+  help:
+    header: "&e=== Commandes ProceduralDungeons ==="
+    create: "&a/dungeon create <nom> [taille] [difficulté] &7- Créer un donjon"
+    enter: "&a/dungeon enter <nom> &7- Entrer dans un donjon"
+    leave: "&a/dungeon leave &7- Quitter le donjon actuel"
+    list: "&a/dungeon list &7- Lister tous les donjons"
+    delete: "&a/dungeon delete <nom> &7- Supprimer un donjon"
+    info: "&a/dungeon info <nom> &7- Afficher les infos d'un donjon"
+    reload: "&a/dungeon reload &7- Recharger la configuration"
+
+  # Messages d'usage
+  usage:
+    create: "&cUsage: /dungeon create <nom> [taille] [difficulté]"
+    enter: "&cUsage: /dungeon enter <nom>"
+    delete: "&cUsage: /dungeon delete <nom>"
+    info: "&cUsage: /dungeon info <nom>"
+
+  # Messages de donjon
+  dungeon:
+    created: "&aDonjon '&e{name}&a' créé avec succès !"
+    already-exists: "&cUn donjon avec ce nom existe déjà !"
+    not-found: "&cDonjon introuvable !"
+    entered: "&aVous êtes entré dans le donjon '&e{name}&a' !"
+    left: "&aVous avez quitté le donjon !"
+    not-in-dungeon: "&cVous n'êtes dans aucun donjon !"
+    deleted: "&aDonjon '&e{name}&a' supprimé avec succès !"
+    no-dungeons: "&cAucun donjon créé !"
+
+  # Messages de boss
+  boss:
+    spawned: "&c⚡ Un boss est apparu !"
+    defeated: "&6✦ Vous avez vaincu le boss du donjon {name} !"
+    key-required: "&cVous avez besoin d'une clé de boss pour entrer !"
+
+  # Messages de pièges
+  traps:
+    activated: "&c⚠ Vous avez activé un piège !"
+    poisoned: "&5Vous êtes empoisonné !"
+    teleported: "&dVous avez été téléporté !"
+
+  # Messages de trésor
+  treasure:
+    found: "&aVous avez trouvé un coffre au trésor !"
+    key-obtained: "&6Vous avez obtenu une clé de boss !"
