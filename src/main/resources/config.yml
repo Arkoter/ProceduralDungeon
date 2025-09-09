@@ -1,0 +1,185 @@
+# Configuration du plugin ProceduralDungeons
+# Version: 1.0.0
+
+# ================================
+# PARAMÈTRES DES DONJONS
+# ================================
+dungeon:
+  # Taille maximale d'un donjon (en blocs)
+  max-size: 100
+
+  # Taille minimale d'un donjon (en blocs)
+  min-size: 30
+
+  # Difficulté maximale autorisée
+  max-difficulty: 10
+
+  # Difficulté par défaut lors de la création
+  default-difficulty: 1
+
+  # Taille par défaut lors de la création
+  default-size: 50
+
+  # Hauteur des murs du donjon
+  wall-height: 4
+
+  # Matériau des sols
+  floor-material: STONE_BRICKS
+
+  # Matériau des murs
+  wall-material: COBBLESTONE
+
+  # Matériau des salles spéciales
+  special-room-material: POLISHED_ANDESITE
+
+# ================================
+# PARAMÈTRES DU LOOT
+# ================================
+loot:
+  # Chance de base de trouver des diamants (%)
+  diamond-chance: 20
+
+  # Chance de base d'objets rares (%)
+  rare-item-chance: 15
+
+  # Chance d'obtenir une clé de boss dans un coffre (%)
+  boss-key-chance: 25
+
+  # Multiplicateur de loot basé sur la difficulté
+  difficulty-multiplier: 1.5
+
+  # Nombre minimum de coffres par donjon
+  min-chests-per-dungeon: 3
+
+  # Nombre maximum de coffres par donjon
+  max-chests-per-dungeon: 8
+
+# ================================
+# PARAMÈTRES DES BOSS
+# ================================
+boss:
+  # Multiplicateur de vie des boss selon la difficulté
+  health-multiplier: 1.5
+
+  # Multiplicateur d'expérience des boss
+  experience-multiplier: 2.0
+
+  # Types de boss selon la difficulté
+  boss-types:
+    1: ZOMBIE
+    2: SKELETON
+    3: WITHER_SKELETON
+    4: BLAZE
+    5: WITHER
+
+  # Bonus de loot pour les boss (multiplicateur)
+  loot-bonus-multiplier: 3.0
+
+# ================================
+# PARAMÈTRES DES PIÈGES
+# ================================
+traps:
+  # Dégâts infligés par les pièges de base
+  damage: 2.0
+
+  # Multiplicateur de dégâts selon la difficulté
+  damage-multiplier: 1.2
+
+  # Nombre minimum de pièges par donjon
+  min-traps-per-dungeon: 5
+
+  # Nombre maximum de pièges par donjon
+  max-traps-per-dungeon: 20
+
+  # Pourcentage de pièges par rapport à la taille du donjon
+  trap-density: 0.15
+
+  # Durée de l'effet poison (en ticks, 20 ticks = 1 seconde)
+  poison-duration: 200
+
+  # Niveau de l'effet poison
+  poison-level: 1
+
+# ================================
+# PARAMÈTRES DE GÉNÉRATION
+# ================================
+generation:
+  # Pourcentage d'ouvertures supplémentaires dans le labyrinthe
+  extra-connections: 0.01
+
+  # Nombre de salles spéciales par donjon
+  special-rooms:
+    min: 3
+    max: 6
+
+  # Taille des salles spéciales
+  room-size:
+    min: 5
+    max: 9
+
+  # Taille de la salle du boss
+  boss-room-size: 12
+
+  # Seed aléatoire pour la génération (0 = aléatoire)
+  seed: 0
+
+# ================================
+# PARAMÈTRES DE PERFORMANCE
+# ================================
+performance:
+  # Délai de génération entre chaque chunk (en millisecondes)
+  generation-delay: 50
+
+  # Nombre maximum de donjons actifs simultanément
+  max-active-dungeons: 10
+
+  # Temps d'inactivité avant nettoyage automatique (en millisecondes)
+  cleanup-threshold: 3600000 # 1 heure
+
+  # Intervalle de sauvegarde automatique (en secondes)
+  auto-save-interval: 300 # 5 minutes
+
+# ================================
+# PARAMÈTRES D'EXPÉRIENCE
+# ================================
+experience:
+  # Bonus d'expérience pour tuer des monstres dans un donjon
+  monster-kill-bonus: 1.5
+
+  # Bonus d'expérience pour compléter un donjon
+  completion-bonus: 100
+
+  # Bonus d'expérience selon la difficulté
+  difficulty-bonus: 50
+
+# ================================
+# PARAMÈTRES DE DEBUG
+# ================================
+debug:
+  # Activer les messages de debug
+  enabled: false
+
+  # Afficher les informations de génération
+  show-generation-info: false
+
+  # Afficher les statistiques de performance
+  show-performance-stats: false
+
+# ================================
+# PARAMÈTRES AVANCÉS
+# ================================
+advanced:
+  # Utiliser la génération asynchrone
+  async-generation: true
+
+  # Précharger les chunks du donjon
+  preload-chunks: true
+
+  # Limiter le nombre de monstres dans un donjon
+  max-monsters-per-dungeon: 50
+
+  # Respawn automatique des monstres
+  monster-respawn: true
+
+  # Délai de respawn des monstres (en secondes)
+  monster-respawn-delay: 300

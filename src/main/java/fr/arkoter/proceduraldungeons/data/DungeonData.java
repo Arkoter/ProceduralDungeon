@@ -136,7 +136,8 @@ public class DungeonData {
         for (Map<?, ?> trapMap : trapData) {
             String trapLocStr = (String) trapMap.get("location");
             int trapType = (Integer) trapMap.get("type");
-            boolean activated = (Boolean) trapMap.getOrDefault("activated", false);
+            Object activatedObj = trapMap.getOrDefault("activated", false);
+            boolean activated = activatedObj instanceof Boolean ? (Boolean) activatedObj : false;
 
             Location trapLoc = LocationUtils.stringToLocation(trapLocStr);
             if (trapLoc != null) {

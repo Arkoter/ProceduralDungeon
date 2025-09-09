@@ -1,0 +1,54 @@
+name: ProceduralDungeons
+version: 1.0.0
+main: fr.arkoter.proceduraldungeons.ProceduralDungeons
+api-version: 1.19
+author: Arkoter
+description: Plugin de génération procédurale de donjons avec labyrinthes, pièges et boss
+website: https://github.com/Arkoter/ProceduralDungeons
+depend: []
+softdepend: []
+
+commands:
+  dungeon:
+    description: Commandes de gestion des donjons
+    usage: |
+      /<command> help - Afficher l'aide
+      /<command> create <nom> [taille] [difficulté] - Créer un donjon
+      /<command> enter <nom> - Entrer dans un donjon
+      /<command> leave - Quitter le donjon actuel
+      /<command> list - Lister tous les donjons
+      /<command> info <nom> - Afficher les informations d'un donjon
+      /<command> delete <nom> - Supprimer un donjon (admin)
+      /<command> reload - Recharger la configuration (admin)
+    permission: proceduraldungeons.use
+    aliases: [pdungeon, pd]
+
+permissions:
+  proceduraldungeons.*:
+    description: Toutes les permissions du plugin
+    children:
+      proceduraldungeons.use: true
+      proceduraldungeons.create: true
+      proceduraldungeons.enter: true
+      proceduraldungeons.admin: true
+    default: op
+
+  proceduraldungeons.use:
+    description: Permet d'utiliser les commandes de base des donjons
+    default: true
+
+  proceduraldungeons.create:
+    description: Permet de créer des donjons
+    default: true
+
+  proceduraldungeons.enter:
+    description: Permet d'entrer dans les donjons
+    default: true
+
+  proceduraldungeons.admin:
+    description: Permet d'administrer les donjons (supprimer, recharger config)
+    default: op
+    children:
+      proceduraldungeons.use: true
+      proceduraldungeons.create: true
+      proceduraldungeons.enter: true

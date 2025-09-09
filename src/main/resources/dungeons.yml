@@ -1,0 +1,27 @@
+# Fichier de données des donjons - généré automatiquement
+# Ce fichier stocke toutes les informations des donjons créés
+# ⚠️ Ne pas modifier manuellement sauf si vous savez ce que vous faites
+
+# Structure des données :
+# dungeons:
+#   nom_du_donjon:
+#     location: "world,x,y,z,yaw,pitch"
+#     size: 50
+#     difficulty: 1
+#     created-at: 1694265465000
+#     boss-alive: false
+#     boss-location: "world,x,y,z,yaw,pitch"
+#     treasure-chests:
+#       - "world,x,y,z,yaw,pitch"
+#     traps:
+#       - location: "world,x,y,z,yaw,pitch"
+#         type: 0
+#         activated: false
+#     stats:
+#       times-entered: 0
+#       times-completed: 0
+#       total-monsters-killed: 0
+#       fastest-completion: 0
+#     active-players: []
+
+dungeons: {}

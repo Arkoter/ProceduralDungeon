@@ -1,60 +1,358 @@
 # Tables de loot pour ProceduralDungeons
+# Système configurable de récompenses
 
+# ================================
+# COFFRES DE BASE
+# ================================
 loot-tables:
   basic-chest:
+    description: "Coffres standard dans les couloirs"
     items:
       - material: GOLD_INGOT
         min-amount: 2
         max-amount: 5
         chance: 80
+
       - material: IRON_INGOT
         min-amount: 1
         max-amount: 3
         chance: 70
+
       - material: BREAD
         min-amount: 3
         max-amount: 8
         chance: 90
+
+      - material: COOKED_BEEF
+        min-amount: 2
+        max-amount: 6
+        chance: 60
+
+      - material: ARROW
+        min-amount: 8
+        max-amount: 16
+        chance: 50
+
       - material: DIAMOND
         min-amount: 1
         max-amount: 2
         chance: 15
 
+      - material: EMERALD
+        min-amount: 1
+        max-amount: 3
+        chance: 25
+
+      - material: POTION
+        min-amount: 1
+        max-amount: 2
+        chance: 30
+        custom-name: "&9Potion de Soin"
+
+  # ================================
+  # COFFRES RARES
+  # ================================
   rare-chest:
+    description: "Coffres dans les salles spéciales"
     items:
       - material: DIAMOND
         min-amount: 2
         max-amount: 4
         chance: 50
+
       - material: EMERALD
         min-amount: 1
         max-amount: 3
         chance: 40
+
       - material: ENCHANTED_BOOK
         min-amount: 1
         max-amount: 1
         chance: 25
+        enchantments:
+          - "DAMAGE_ALL:1-3"
+          - "PROTECTION_ENVIRONMENTAL:1-2"
+          - "DIG_SPEED:1-2"
+
       - material: NETHER_STAR
         min-amount: 1
         max-amount: 1
         chance: 10
 
-  boss-loot:
-    items:
-      - material: DIAMOND
-        min-amount: 5
-        max-amount: 10
-        chance: 100
-      - material: EMERALD
-        min-amount: 3
-        max-amount: 6
-        chance: 80
-      - material: NETHER_STAR
+      - material: DIAMOND_SWORD
         min-amount: 1
-        max-amount: 2
-        chance: 60
+        max-amount: 1
+        chance: 20
+        enchanted: true
+        custom-name: "&bÉpée du Donjon"
+
       - material: DIAMOND_CHESTPLATE
         min-amount: 1
         max-amount: 1
-        chance: 30
+        chance: 15
         enchanted: true
+        custom-name: "&bPlastron du Donjon"
+
+      - material: BOW
+        min-amount: 1
+        max-amount: 1
+        chance: 25
+        enchanted: true
+        custom-name: "&bArc du Donjon"
+
+      - material: GOLDEN_APPLE
+        min-amount: 1
+        max-amount: 3
+        chance: 35
+
+      - material: EXPERIENCE_BOTTLE
+        min-amount: 5
+        max-amount: 10
+        chance: 40
+
+  # ================================
+  # LOOT DES BOSS
+  # ================================
+  boss-loot:
+    description: "Récompenses des boss selon la difficulté"
+    difficulty-1:
+      items:
+        - material: DIAMOND
+          min-amount: 3
+          max-amount: 6
+          chance: 100
+
+        - material: EMERALD
+          min-amount: 2
+          max-amount: 4
+          chance: 80
+
+        - material: GOLD_INGOT
+          min-amount: 5
+          max-amount: 10
+          chance: 100
+
+        - material: ENCHANTED_BOOK
+          min-amount: 1
+          max-amount: 1
+          chance: 50
+
+        - material: DIAMOND_SWORD
+          min-amount: 1
+          max-amount: 1
+          chance: 30
+          enchanted: true
+          custom-name: "&6Épée du Boss Zombie"
+
+    difficulty-2:
+      items:
+        - material: DIAMOND
+          min-amount: 4
+          max-amount: 8
+          chance: 100
+
+        - material: EMERALD
+          min-amount: 3
+          max-amount: 6
+          chance: 100
+
+        - material: NETHER_STAR
+          min-amount: 1
+          max-amount: 1
+          chance: 30
+
+        - material: ENCHANTED_BOOK
+          min-amount: 1
+          max-amount: 2
+          chance: 70
+
+        - material: BOW
+          min-amount: 1
+          max-amount: 1
+          chance: 50
+          enchanted: true
+          custom-name: "&6Arc du Boss Squelette"
+
+    difficulty-3:
+      items:
+        - material: DIAMOND
+          min-amount: 6
+          max-amount: 12
+          chance: 100
+
+        - material: NETHER_STAR
+          min-amount: 1
+          max-amount: 2
+          chance: 60
+
+        - material: NETHERITE_SCRAP
+          min-amount: 1
+          max-amount: 3
+          chance: 40
+
+        - material: ENCHANTED_BOOK
+          min-amount: 2
+          max-amount: 3
+          chance: 90
+
+        - material: DIAMOND_CHESTPLATE
+          min-amount: 1
+          max-amount: 1
+          chance: 40
+          enchanted: true
+          custom-name: "&6Plastron du Wither Squelette"
+
+    difficulty-4:
+      items:
+        - material: DIAMOND
+          min-amount: 8
+          max-amount: 15
+          chance: 100
+
+        - material: NETHER_STAR
+          min-amount: 2
+          max-amount: 3
+          chance: 80
+
+        - material: ANCIENT_DEBRIS
+          min-amount: 1
+          max-amount: 2
+          chance: 30
+
+        - material: NETHERITE_INGOT
+          min-amount: 1
+          max-amount: 1
+          chance: 20
+
+        - material: BLAZE_ROD
+          min-amount: 3
+          max-amount: 6
+          chance: 100
+
+    difficulty-5-plus:
+      items:
+        - material: DIAMOND
+          min-amount: 10
+          max-amount: 20
+          chance: 100
+
+        - material: NETHER_STAR
+          min-amount: 3
+          max-amount: 5
+          chance: 100
+
+        - material: NETHERITE_INGOT
+          min-amount: 1
+          max-amount: 3
+          chance: 50
+
+        - material: ANCIENT_DEBRIS
+          min-amount: 2
+          max-amount: 4
+          chance: 60
+
+        - material: DRAGON_EGG
+          min-amount: 1
+          max-amount: 1
+          chance: 5
+          custom-name: "&dŒuf de Dragon Légendaire"
+
+        - material: ELYTRA
+          min-amount: 1
+          max-amount: 1
+          chance: 15
+          custom-name: "&5Élytres du Maître des Donjons"
+
+  # ================================
+  # LOOT DES MONSTRES
+  # ================================
+  monster-loot:
+    description: "Loot bonus des monstres dans les donjons"
+    common-monsters:
+      items:
+        - material: IRON_INGOT
+          min-amount: 1
+          max-amount: 2
+          chance: 30
+
+        - material: GOLD_NUGGET
+          min-amount: 1
+          max-amount: 4
+          chance: 50
+
+        - material: EXPERIENCE_BOTTLE
+          min-amount: 1
+          max-amount: 1
+          chance: 20
+
+    elite-monsters:
+      items:
+        - material: DIAMOND
+          min-amount: 1
+          max-amount: 1
+          chance: 15
+
+        - material: EMERALD
+          min-amount: 1
+          max-amount: 2
+          chance: 25
+
+        - material: ENCHANTED_BOOK
+          min-amount: 1
+          max-amount: 1
+          chance: 10
+
+# ================================
+# OBJETS SPÉCIAUX
+# ================================
+special-items:
+  boss-key:
+    material: TRIPWIRE_HOOK
+    custom-name: "&6Clé du Boss - {dungeon}"
+    lore:
+      - "&7Une clé mystérieuse qui permet"
+      - "&7d'accéder à la salle du boss"
+      - "&7du donjon &e{dungeon}"
+      - ""
+      - "&cUtilisation unique"
+    glow: true
+
+  dungeon-map:
+    material: MAP
+    custom-name: "&eCarte du Donjon"
+    lore:
+      - "&7Une carte révélant la disposition"
+      - "&7du donjon actuel"
+      - ""
+      - "&eClique droit pour utiliser"
+
+  teleport-scroll:
+    material: PAPER
+    custom-name: "&dParchemin de Téléportation"
+    lore:
+      - "&7Vous téléporte à l'entrée"
+      - "&7du donjon"
+      - ""
+      - "&cUtilisation unique"
+    glow: true
+
+# ================================
+# PARAMÈTRES GÉNÉRAUX
+# ================================
+settings:
+  # Multiplicateur global de chance de loot
+  global-chance-multiplier: 1.0
+
+  # Bonus de loot selon la difficulté (% par niveau)
+  difficulty-bonus-percent: 10
+
+  # Chance d'obtenir des objets enchantés
+  enchanted-item-chance: 25
+
+  # Niveaux d'enchantement minimum et maximum
+  enchantment-levels:
+    min: 1
+    max: 3
+
+  # Chance d'obtenir un nom personnalisé sur les objets
+  custom-name-chance: 15
