@@ -29,7 +29,7 @@ commands:
       /<command> reload - Recharger la configuration (admin uniquement)
       /<command> stats [joueur] - Voir les statistiques d'un joueur
     permission: proceduraldungeons.use
-    aliases: [pdungeon, pd, dungeons]
+    aliases: [pdungeon, pd]
 
 permissions:
   # Permissions principales

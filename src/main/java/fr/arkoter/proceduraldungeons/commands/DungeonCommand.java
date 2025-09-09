@@ -17,6 +17,9 @@ public class DungeonCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        // Debug pour voir les arguments reçus
+        plugin.getLogger().info("Command received: " + label + " with args: " + Arrays.toString(args));
+
         if (!(sender instanceof Player)) {
             sender.sendMessage(MessageUtils.getMessage("messages.general.only-players"));
             return true;

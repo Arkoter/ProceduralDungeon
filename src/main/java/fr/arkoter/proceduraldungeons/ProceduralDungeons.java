@@ -70,7 +70,7 @@ public class ProceduralDungeons extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         getServer().getPluginManager().registerEvents(new WizardListener(this), this);
 
-        // Enregistrement des commandes
+// Enregistrement des commandes
         getLogger().info("Enregistrement des commandes...");
         DungeonCommand dungeonCommand = new DungeonCommand(this);
         getCommand("dungeon").setExecutor(dungeonCommand);

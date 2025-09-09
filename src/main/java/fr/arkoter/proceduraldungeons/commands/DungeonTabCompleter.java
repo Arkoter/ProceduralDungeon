@@ -21,21 +21,14 @@ public class DungeonTabCompleter implements TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        if (!(sender instanceof Player)) {
-            return new ArrayList<>();
-        }
-
-        Player player = (Player) sender;
         List<String> completions = new ArrayList<>();
 
         if (args.length == 1) {
-            // Commandes principales
-            List<String> subCommands = Arrays.asList("create", "enter", "leave", "list", "info");
-
-            if (player.hasPermission("proceduraldungeons.admin")) {
-                subCommands = new ArrayList<>(subCommands);
-                subCommands.addAll(Arrays.asList("delete", "reload"));
-            }
+            // Première argument : sous-commandes
+            List<String> subCommands = Arrays.asList(
+                    "help", "wizard", "create", "enter", "leave", "list",
+                    "info", "delete", "share", "copy", "preview", "template", "reload", "stats"
+            );
 
             return subCommands.stream()
                     .filter(cmd -> cmd.toLowerCase().startsWith(args[0].toLowerCase()))
@@ -49,25 +42,71 @@ public class DungeonTabCompleter implements TabCompleter {
                 case "enter":
                 case "info":
                 case "delete":
-                    // Complétion avec les noms de donjons existants
+                case "preview":
+                    // Noms des donjons existants
                     return plugin.getDungeonManager().getDungeonNames().stream()
                             .filter(name -> name.toLowerCase().startsWith(args[1].toLowerCase()))
                             .collect(Collectors.toList());
 
                 case "create":
-                    // Suggestions de noms pour nouveau donjon
-                    return Arrays.asList("mon_donjon", "labyrinthe", "forteresse");
+                    // Suggestions pour le nom du donjon
+                    completions.add("<nom_du_donjon>");
+                    return completions;
+
+                case "share":
+                case "copy":
+                    // Noms des donjons pour partage/copie
+                    return plugin.getDungeonManager().getDungeonNames().stream()
+                            .filter(name -> name.toLowerCase().startsWith(args[1].toLowerCase()))
+                            .collect(Collectors.toList());
+
+                case "template":
+                    // Templates disponibles
+                    completions.addAll(Arrays.asList("medieval", "nether", "ocean", "desert", "ice", "end", "jungle", "steampunk"));
+                    return completions.stream()
+                            .filter(template -> template.toLowerCase().startsWith(args[1].toLowerCase()))
+                            .collect(Collectors.toList());
+
+                case "stats":
+                    // Noms des joueurs en ligne
+                    return plugin.getServer().getOnlinePlayers().stream()
+                            .map(Player::getName)
+                            .filter(name -> name.toLowerCase().startsWith(args[1].toLowerCase()))
+                            .collect(Collectors.toList());
             }
         }
 
-        if (args.length == 3 && args[0].equalsIgnoreCase("create")) {
-            // Suggestions de taille
-            return Arrays.asList("30", "50", "70", "100");
+        if (args.length == 3) {
+            String subCommand = args[0].toLowerCase();
+
+            switch (subCommand) {
+                case "create":
+                    // Taille du donjon
+                    completions.addAll(Arrays.asList("30", "50", "80", "100"));
+                    return completions;
+
+                case "share":
+                    // Noms des joueurs en ligne
+                    return plugin.getServer().getOnlinePlayers().stream()
+                            .map(Player::getName)
+                            .filter(name -> name.toLowerCase().startsWith(args[2].toLowerCase()))
+                            .collect(Collectors.toList());
+
+                case "copy":
+                    // Nouveau nom pour la copie
+                    completions.add("<nouveau_nom>");
+                    return completions;
+            }
         }
 
-        if (args.length == 4 && args[0].equalsIgnoreCase("create")) {
-            // Suggestions de difficulté
-            return Arrays.asList("1", "2", "3", "4", "5");
+        if (args.length == 4) {
+            String subCommand = args[0].toLowerCase();
+
+            if (subCommand.equals("create")) {
+                // Difficulté du donjon
+                completions.addAll(Arrays.asList("1", "2", "3", "4", "5"));
+                return completions;
+            }
         }
 
         return completions;
