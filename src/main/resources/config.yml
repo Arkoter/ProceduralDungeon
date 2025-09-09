@@ -1,5 +1,7 @@
 # Configuration du plugin ProceduralDungeons
 # Version: 1.0.0
+# Développé par: Arkoter
+# GitHub: https://github.com/Arkoter/ProceduralDungeons
 
 # ================================
 # PARAMÈTRES DES DONJONS
@@ -183,3 +185,147 @@ advanced:
 
   # Délai de respawn des monstres (en secondes)
   monster-respawn-delay: 300
+
+# ================================
+# PARAMÈTRES DE LIMITES
+# ================================
+limits:
+  # Nombre maximum de donjons par joueur
+  max-dungeons-per-player: 5
+
+  # Nombre maximum de joueurs par donjon
+  max-players-per-dungeon: 10
+
+  # Cooldown entre créations de donjon (en secondes)
+  creation-cooldown: 60
+
+  # Mondes où la création est autorisée (vide = tous)
+  allowed-worlds: []
+
+# ================================
+# PARAMÈTRES DE THÈMES
+# ================================
+themes:
+  # Activer les thèmes personnalisés
+  enabled: true
+
+  # Thèmes disponibles et leurs matériaux
+  medieval:
+    floor: STONE_BRICKS
+    wall: COBBLESTONE
+    decoration: STONE
+
+  nether:
+    floor: NETHER_BRICKS
+    wall: BLACKSTONE
+    decoration: MAGMA_BLOCK
+
+  ocean:
+    floor: PRISMARINE
+    wall: DARK_PRISMARINE
+    decoration: SEA_LANTERN
+
+  desert:
+    floor: SANDSTONE
+    wall: SMOOTH_SANDSTONE
+    decoration: CHISELED_SANDSTONE
+
+  ice:
+    floor: PACKED_ICE
+    wall: BLUE_ICE
+    decoration: ICE
+
+  end:
+    floor: END_STONE_BRICKS
+    wall: END_STONE
+    decoration: PURPUR_BLOCK
+
+  jungle:
+    floor: MOSSY_STONE_BRICKS
+    wall: JUNGLE_LOG
+    decoration: JUNGLE_LEAVES
+
+  steampunk:
+    floor: IRON_BLOCK
+    wall: COPPER_BLOCK
+    decoration: REDSTONE_LAMP
+
+# ================================
+# PARAMÈTRES D'ÉCONOMIE (OPTIONNEL)
+# ================================
+economy:
+  # Activer l'intégration économique
+  enabled: false
+
+  # Coût de création d'un donjon
+  creation-cost: 1000
+
+  # Coût par bloc de taille supplémentaire
+  size-cost-per-block: 10
+
+  # Récompense pour compléter un donjon
+  completion-reward: 500
+
+# ================================
+# PARAMÈTRES DE SAUVEGARDE
+# ================================
+backup:
+  # Activer les sauvegardes automatiques
+  enabled: true
+
+  # Intervalle entre les sauvegardes (en minutes)
+  interval: 30
+
+  # Nombre de sauvegardes à conserver
+  keep-backups: 5
+
+  # Compresser les sauvegardes
+  compress: true
+
+# ================================
+# NOTIFICATIONS ET MESSAGES
+# ================================
+notifications:
+  # Activer les notifications en temps réel
+  enabled: true
+
+  # Afficher les messages de progression
+  show-progress: true
+
+  # Afficher les statistiques en fin de donjon
+  show-completion-stats: true
+
+  # Notifications pour les autres joueurs
+  broadcast-achievements: true
+
+# ================================
+# COMPATIBILITÉ AVEC D'AUTRES PLUGINS
+# ================================
+compatibility:
+  # WorldGuard - Respecter les régions protégées
+  worldguard: true
+
+  # PlotSquared - Intégration avec les parcelles
+  plotsquared: false
+
+  # McMMO - Intégration avec les compétences
+  mcmmo: true
+
+  # Vault - Intégration économique
+  vault: false
+
+# ================================
+# PARAMÈTRES EXPÉRIMENTAUX
+# ================================
+experimental:
+  # Nouvelles fonctionnalités en test
+  # (À utiliser à vos risques et périls)
+
+  # Génération procédurale avancée
+  advanced-generation: false
+
+  # IA pour les boss
+  smart-boss-ai: false
+
+  # Donjons multi-étages
+  multi-level-dungeons: false

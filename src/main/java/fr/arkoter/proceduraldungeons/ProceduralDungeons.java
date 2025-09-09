@@ -42,15 +42,24 @@ public class ProceduralDungeons extends JavaPlugin {
             getLogger().info("Dossier de données créé: " + getDataFolder().getPath());
         }
 
-        // Initialisation des gestionnaires de configuration
-        getLogger().info("Chargement de la configuration...");
+        // IMPORTANT: Sauvegarder la config par défaut AVANT d'initialiser ConfigManager
+        getLogger().info("Création des fichiers de configuration...");
         saveDefaultConfig();
+        createDefaultMessages();
+
+        // Initialisation du gestionnaire de configuration APRÈS saveDefaultConfig()
+        getLogger().info("Chargement de la configuration...");
         configManager = new ConfigManager(this);
+        configManager.loadConfig(); // Charger immédiatement la config
 
         // Initialisation des gestionnaires de données
         getLogger().info("Chargement des données...");
         dungeonData = new DungeonData(this);
         playerData = new PlayerData(this);
+
+        // Charger les messages
+        getLogger().info("Chargement des messages...");
+        MessageUtils.loadMessages(new File(getDataFolder(), "messages.yml"));
 
         // Initialisation des gestionnaires principaux
         getLogger().info("Initialisation des gestionnaires...");
@@ -59,10 +68,6 @@ public class ProceduralDungeons extends JavaPlugin {
         templateManager = new TemplateManager(this);
         previewManager = new PreviewManager(this);
 
-        // Charger les messages
-        getLogger().info("Chargement des messages...");
-        MessageUtils.loadMessages(new File(getDataFolder(), "messages.yml"));
-
         // Enregistrement des événements
         getLogger().info("Enregistrement des listeners...");
         getServer().getPluginManager().registerEvents(new DungeonListener(this), this);
@@ -70,14 +75,11 @@ public class ProceduralDungeons extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         getServer().getPluginManager().registerEvents(new WizardListener(this), this);
 
-// Enregistrement des commandes
+        // Enregistrement des commandes
         getLogger().info("Enregistrement des commandes...");
         DungeonCommand dungeonCommand = new DungeonCommand(this);
         getCommand("dungeon").setExecutor(dungeonCommand);
         getCommand("dungeon").setTabCompleter(new DungeonTabCompleter(this));
-
-        // Charger la configuration
-        configManager.loadConfig();
 
         // Démarrer la sauvegarde automatique
         startAutoSave();
@@ -108,12 +110,22 @@ public class ProceduralDungeons extends JavaPlugin {
         getLogger().info("ProceduralDungeons désactivé avec succès !");
     }
 
+    private void createDefaultMessages() {
+        File messagesFile = new File(getDataFolder(), "messages.yml");
+        if (!messagesFile.exists()) {
+            saveResource("messages.yml", false);
+            getLogger().info("Fichier messages.yml créé");
+        }
+    }
+
     public void reloadConfigs() {
         getLogger().info("Rechargement de la configuration...");
 
         // Recharger les configurations
         reloadConfig();
-        configManager.loadConfig();
+        if (configManager != null) {
+            configManager.loadConfig();
+        }
 
         // Recharger les messages
         MessageUtils.loadMessages(new File(getDataFolder(), "messages.yml"));
@@ -128,6 +140,8 @@ public class ProceduralDungeons extends JavaPlugin {
     }
 
     private void startAutoSave() {
+        if (configManager == null) return;
+
         int interval = configManager.getAutoSaveInterval();
         if (interval > 0) {
             autoSaveTask = getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {

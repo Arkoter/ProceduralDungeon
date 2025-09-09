@@ -119,3 +119,268 @@ messages:
     left: "&7&l← &7Vous avez quitté le donjon."
     not-in-dungeon: "&c&l✗ &cVous n'êtes dans aucun donjon !"
     already-in-dungeon: "&c&l✗ &cVous êtes déjà dans un donjon ! Tapez &e/dungeon leave &cpour en sortir."
+
+    # État et informations
+    full: "&c&l⚠ &cCe donjon est plein ! ({current}/{max} joueurs)"
+    empty: "&7&l◯ &7Ce donjon est vide."
+    no-dungeons: "&7&l□ &7Aucun donjon disponible pour le moment."
+
+    # Gestion
+    deleted: "&a&l✓ &aDonjon '&e{name}&a' supprimé avec succès !"
+    copied: "&a&l✓ &aDonjon '&e{source}&a' copié vers '&e{destination}&a' !"
+    shared: "&a&l✓ &aDonjon '&e{name}&a' partagé avec &b{player}&a !"
+
+    # Listes et informations
+    list-header: "&e&l╭─── &6&lListe des donjons &e&l({count}) ───╮"
+    list-entry: "&7│ &a{name} &8| &7Difficulté: &e{difficulty}&7/10 &8| &7Joueurs: &b{players}&7/{max} &8| &7Propriétaire: &f{owner}"
+    list-footer: "&e&l╰─────────────────────────────────────╯"
+
+    # Informations détaillées
+    info-header: "&e&l╭── &6&lInformations: {name} &e&l──╮"
+    info-owner: "&7│ &6Propriétaire: &f{owner}"
+    info-size: "&7│ &6Taille: &f{size}x{size} blocs"
+    info-difficulty: "&7│ &6Difficulté: &f{difficulty}/10"
+    info-players: "&7│ &6Joueurs actifs: &f{current}/{max}"
+    info-times-entered: "&7│ &6Fois entré: &f{count}"
+    info-times-completed: "&7│ &6Fois complété: &f{count}"
+    info-completion-rate: "&7│ &6Taux de réussite: &f{rate}%"
+    info-chests: "&7│ &6Coffres au trésor: &f{count}"
+    info-traps: "&7│ &6Pièges: &f{count}"
+    info-boss-alive: "&7│ &6Boss vivant: {status}"
+    info-created: "&7│ &6Créé le: &f{date}"
+    info-footer: "&e&l╰─────────────────────────────────╯"
+
+  # ================================
+  # ASSISTANT DE CRÉATION (WIZARD)
+  # ================================
+  wizard:
+    # Démarrage
+    welcome: "&e&l🏰 &6&lBienvenue dans l'assistant de création de donjon !"
+    welcome-subtitle: "&7Suivez les étapes pour créer votre donjon parfait"
+
+    # Étapes
+    step-name: "&e&l📝 &6Étape 1/6: &eNom du donjon"
+    step-name-prompt: "&7Tapez le nom de votre donjon dans le chat :"
+    step-name-example: "&a• Exemple: &fMonSuperDonjon"
+    step-name-rules: "&c• Pas d'espaces autorisés, 3-20 caractères"
+
+    step-size: "&e&l📏 &6Étape 2/6: &eTaille du donjon"
+    step-size-prompt: "&7Choisissez la taille de votre donjon :"
+
+    step-theme: "&e&l🎨 &6Étape 3/6: &eThème du donjon"
+    step-theme-prompt: "&7Sélectionnez le thème de votre donjon :"
+
+    step-difficulty: "&e&l⚔ &6Étape 4/6: &eDifficulté"
+    step-difficulty-prompt: "&7Choisissez la difficulté de votre donjon :"
+
+    step-preview: "&e&l👁 &6Étape 5/6: &eAperçu"
+    step-confirm: "&e&l✅ &6Étape 6/6: &eConfirmation"
+
+    # Validation
+    name-valid: "&a&l✓ &aNom accepté: &e{name}"
+    name-invalid: "&c&l✗ &cNom invalide ! Utilisez uniquement des lettres, chiffres et '_'"
+    name-exists: "&c&l✗ &cCe nom existe déjà ! Choisissez-en un autre."
+
+    # Aperçu
+    preview-header: "&e&l╭── &6&lAperçu de votre donjon &e&l──╮"
+    preview-name: "&7│ &6Nom: &f{name}"
+    preview-size: "&7│ &6Taille: &f{size}x{size} blocs"
+    preview-theme: "&7│ &6Thème: &f{theme}"
+    preview-difficulty: "&7│ &6Difficulté: &f{difficulty}/10"
+    preview-estimated-time: "&7│ &6Temps estimé: &f~{time} secondes"
+    preview-footer: "&e&l╰─────────────────────────────────╯"
+    preview-confirm: "&aTapez &e'confirm' &apour créer le donjon"
+    preview-back: "&7Tapez &e'back' &7pour revenir en arrière"
+
+    # Création finale
+    dungeon-created: "&a&l✅ &aVotre donjon '&e&l{name}&a' a été créé avec succès !"
+    creation-time: "&7Temps de création: &e{time}ms"
+
+    # Annulation
+    cancelled: "&7&l✗ &7Assistant de création annulé."
+    cancel-prompt: "&7Tapez &c'cancel' &7à tout moment pour annuler"
+
+    # Navigation
+    next: "&a&l→ &aSuivant"
+    previous: "&7&l← &7Précédent"
+    cancel: "&c&l✗ &cAnnuler"
+
+  # ================================
+  # MESSAGES DES BOSS
+  # ================================
+  boss:
+    spawned: "&c&l⚠ &cUn boss puissant s'est manifesté dans le donjon !"
+    killed: "&a&l⚔ &aLe boss du donjon a été vaincu par &e{player}&a !"
+    despawned: "&7Le boss du donjon a disparu..."
+    no-boss: "&7Aucun boss actif dans ce donjon."
+    boss-room-entered: "&c&l⚠ &cVous entrez dans la salle du boss ! Préparez-vous au combat !"
+    boss-low-health: "&c&l💀 &cLe boss est affaibli ! Encore un effort !"
+    boss-enraged: "&4&l🔥 &4Le boss entre en rage ! Attention !"
+    loot-dropped: "&e&l💎 &eLe boss a laissé des trésors précieux !"
+    key-obtained: "&a&l🗝 &aVous avez obtenu la clé du boss !"
+
+  # ================================
+  # MESSAGES DES PIÈGES
+  # ================================
+  traps:
+    triggered: "&c&l💥 &cVous avez déclenché un piège !"
+    poison: "&5&l☠ &5Vous êtes empoisonné ! &7(-{damage} ❤)"
+    fire: "&4&l🔥 &4Vous brûlez ! &7(-{damage} ❤)"
+    explosion: "&e&l💣 &eExplosion ! &7(-{damage} ❤)"
+    arrow: "&7&l🏹 &7Flèche piégée ! &7(-{damage} ❤)"
+    fall: "&8&l⬇ &8Chute dans un piège ! &7(-{damage} ❤)"
+
+    # Désarmement
+    disarmed: "&a&l🔧 &aPiège désarmé avec succès !"
+    disarm-failed: "&c&l⚠ &cÉchec du désarmement ! Le piège se déclenche !"
+
+    # Types de pièges
+    pressure-plate: "&7Plaque de pression piégée"
+    tripwire: "&7Fil déclencheur"
+    fake-chest: "&7Coffre piégé"
+    hidden-pit: "&7Fosse cachée"
+
+  # ================================
+  # MESSAGES DES TRÉSORS
+  # ================================
+  treasure:
+    found: "&e&l💰 &eVous avez trouvé un trésor !"
+    chest-opened: "&a&l📦 &aCoffre au trésor ouvert !"
+    rare-item: "&5&l✨ &5Objet rare découvert : &f{item}"
+    legendary-item: "&6&l⭐ &6Objet légendaire trouvé : &f{item}"
+    diamond-found: "&b&l💎 &bDiamants trouvés : &f{count}x"
+    empty-chest: "&7&l📭 &7Ce coffre est vide..."
+    already-looted: "&c&l🔒 &cCe coffre a déjà été pillé."
+
+    # Récompenses spéciales
+    bonus-loot: "&a&l🎁 &aBonus de loot pour la difficulté {difficulty} !"
+    completion-reward: "&e&l🏆 &eRécompense de completion obtenue !"
+    first-completion: "&6&l👑 &6Première completion ! Bonus spécial !"
+
+  # ================================
+  # PROGRESSION ET EXPÉRIENCE
+  # ================================
+  progress:
+    monster-killed: "&a&l⚔ &aMonstre éliminé ! &7(+{exp} EXP)"
+    level-up: "&e&l⬆ &eNiveau supérieur ! &7Niveau {level}"
+    dungeon-completed: "&a&l🏁 &aDonjon complété ! &7(+{exp} EXP)"
+    record-broken: "&6&l🏆 &6Nouveau record personnel ! &7Temps: {time}"
+    achievement-unlocked: "&5&l🌟 &5Succès débloqué: &f{achievement}"
+
+    # Statistiques en temps réel
+    time-elapsed: "&7Temps écoulé: &e{time}"
+    monsters-killed: "&7Monstres tués: &c{count}"
+    treasures-found: "&7Trésors trouvés: &e{count}"
+    completion-percentage: "&7Progression: &a{percentage}%"
+
+  # ================================
+  # NOTIFICATIONS ENTRE JOUEURS
+  # ================================
+  notifications:
+    player-joined-dungeon: "&a&l+ &a{player} a rejoint le donjon"
+    player-left-dungeon: "&7&l- &7{player} a quitté le donjon"
+    player-died: "&c&l💀 &c{player} est mort dans le donjon"
+    player-respawned: "&a&l❤ &a{player} a ressuscité"
+    dungeon-empty: "&7&lℹ &7Le donjon est maintenant vide"
+
+    # Partage
+    dungeon-shared-received: "&a&l📩 &a{player} a partagé le donjon '&e{dungeon}&a' avec vous !"
+    dungeon-shared-sent: "&a&l📤 &aDonjon partagé avec {player} !"
+
+    # Activité
+    boss-killed-broadcast: "&6&l🏆 &6{player} a vaincu le boss du donjon '&e{dungeon}&6' !"
+    first-completion: "&5&l⭐ &5{player} est le premier à compléter '&e{dungeon}&5' !"
+
+  # ================================
+  # STATISTIQUES ET CLASSEMENTS
+  # ================================
+  stats:
+    header: "&e&l╭── &6&lStatistiques de {player} &e&l──╮"
+    dungeons-created: "&7│ &6Donjons créés: &f{count}"
+    dungeons-completed: "&7│ &6Donjons complétés: &f{count}"
+    monsters-killed: "&7│ &6Monstres tués: &f{count}"
+    deaths: "&7│ &6Morts: &f{count}"
+    treasures-found: "&7│ &6Trésors trouvés: &f{count}"
+    time-played: "&7│ &6Temps de jeu: &f{time}"
+    favorite-difficulty: "&7│ &6Difficulté préférée: &f{difficulty}"
+    best-time: "&7│ &6Meilleur temps: &f{time}"
+    footer: "&e&l╰─────────────────────────────────╯"
+
+    # Classements
+    leaderboard-header: "&e&l╭── &6&lClassement: {category} &e&l──╮"
+    leaderboard-entry: "&7│ &f{rank}. &e{player} &8- &a{value}"
+    leaderboard-footer: "&e&l╰─────────────────────────────────╯"
+
+    # Personnel
+    your-rank: "&7Votre rang: &e#{rank}&7/{total}"
+    no-stats: "&7Aucune statistique disponible."
+
+  # ================================
+  # MESSAGES D'ERREUR SPÉCIFIQUES
+  # ================================
+  error:
+    dungeon-too-small: "&c&l⚠ &cTaille trop petite ! Minimum: &e{min} &cblocs"
+    dungeon-too-large: "&c&l⚠ &cTaille trop grande ! Maximum: &e{max} &cblocs"
+    max-dungeons-reached: "&c&l⚠ &cLimite de donjons atteinte ! Maximum: &e{max}"
+    invalid-difficulty: "&c&l⚠ &cDifficulté invalide ! Valeurs acceptées: &e1-{max}"
+    world-not-allowed: "&c&l🌍 &cCréation de donjons interdite dans ce monde !"
+    insufficient-space: "&c&l📏 &cEspace insuffisant pour créer le donjon ici !"
+    generation-timeout: "&c&l⏱ &cTemps de génération dépassé ! Réessayez."
+    save-failed: "&c&l💾 &cÉchec de la sauvegarde ! Contactez un administrateur."
+    load-failed: "&c&l📂 &cÉchec du chargement des données !"
+
+    # Erreurs de permission
+    not-owner: "&c&l🔒 &cVous n'êtes pas le propriétaire de ce donjon !"
+    dungeon-protected: "&c&l🛡 &cCe donjon est protégé contre les modifications !"
+    admin-only: "&c&l👨‍💼 &cCommande réservée aux administrateurs !"
+
+    # Erreurs système
+    database-error: "&c&l💻 &cErreur de base de données ! Veuillez réessayer."
+    plugin-disabled: "&c&l🔌 &cPlugin temporairement désactivé pour maintenance."
+    command-cooldown: "&c&l⏳ &cVeuillez attendre &e{time} &csecondes avant de réutiliser cette commande."
+
+  # ================================
+  # THÈMES DE DONJONS
+  # ================================
+  themes:
+    medieval:
+      name: "&7&lMédiéval"
+      description: "&7Château et donjons de pierre classiques"
+
+    nether:
+      name: "&4&lNether"
+      description: "&7Flammes éternelles et forteresses démoniaques"
+
+    ocean:
+      name: "&9&lOcéan"
+      description: "&7Temples sous-marins et trésors engloutis"
+
+    desert:
+      name: "&e&lDésert"
+      description: "&7Pyramides anciennes et oasis mystérieuses"
+
+    ice:
+      name: "&b&lGlace"
+      description: "&7Palais gelés et grottes de cristal"
+
+    end:
+      name: "&5&lEnd"
+      description: "&7Dimensions obscures et vides cosmiques"
+
+    jungle:
+      name: "&2&lJungle"
+      description: "&7Temples perdus dans la végétation luxuriante"
+
+    steampunk:
+      name: "&6&lSteampunk"
+      description: "&7Mécanismes complexes et technologie à vapeur"
+
+  # ================================
+  # MESSAGES DE MAINTENANCE
+  # ================================
+  maintenance:
+    cleanup-started: "&e&l🧹 &eNettoyage des anciens donjons en cours..."
+    cleanup-completed: "&a&l✅ &aNettoyage terminé ! &7{count} donjons supprimés."
+    backup-started: "&e&l💾 &eSauvegarde de tous les donjons en cours..."
+    backup-completed: "&a&l✅ &aSauvegarde terminée ! &7{count} donjons sauvegardés."
+    auto-save: "&7&l💾 &7Sauvegarde automatique effectuée."
