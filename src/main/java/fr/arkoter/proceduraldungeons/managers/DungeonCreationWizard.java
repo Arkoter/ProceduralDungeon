@@ -1,6 +1,7 @@
 package fr.arkoter.proceduraldungeons.managers;
 
 import fr.arkoter.proceduraldungeons.ProceduralDungeons;
+import fr.arkoter.proceduraldungeons.models.WizardSession;
 import fr.arkoter.proceduraldungeons.models.DungeonTemplate;
 import fr.arkoter.proceduraldungeons.models.DungeonTheme;
 import fr.arkoter.proceduraldungeons.utils.MessageUtils;
@@ -24,14 +25,14 @@ public class DungeonCreationWizard {
 
     public void startWizard(Player player) {
         if (activeSessions.containsKey(player.getUniqueId())) {
-            player.sendMessage(MessageUtils.getMessage("messages.wizard.already-active"));
+            player.sendMessage("§cVous avez déjà un assistant actif !");
             return;
         }
 
         WizardSession session = new WizardSession(player.getUniqueId());
         activeSessions.put(player.getUniqueId(), session);
 
-        player.sendMessage(MessageUtils.getMessage("messages.wizard.welcome"));
+        player.sendMessage("§eBienvenue dans l'assistant de création de donjon !");
         showStep(player, WizardStep.NAME);
     }
 
@@ -54,18 +55,6 @@ public class DungeonCreationWizard {
             case DIFFICULTY:
                 showDifficultySelection(player);
                 break;
-            case ROOMS:
-                showRoomTypeSelection(player);
-                break;
-            case MONSTERS:
-                showMonsterSelection(player);
-                break;
-            case TRAPS:
-                showTrapSelection(player);
-                break;
-            case REWARDS:
-                showRewardSelection(player);
-                break;
             case PREVIEW:
                 showPreview(player);
                 break;
@@ -76,7 +65,7 @@ public class DungeonCreationWizard {
     }
 
     private void showNameSelection(Player player) {
-        player.sendMessage("§e=== Étape 1/9: Nom du donjon ===");
+        player.sendMessage("§e=== Étape 1/6: Nom du donjon ===");
         player.sendMessage("§7Tapez le nom de votre donjon dans le chat:");
         player.sendMessage("§a• Exemple: MonSuperDonjon");
         player.sendMessage("§c• Pas d'espaces autorisés");
@@ -138,118 +127,6 @@ public class DungeonCreationWizard {
         player.openInventory(gui);
     }
 
-    private void showRoomTypeSelection(Player player) {
-        Inventory gui = plugin.getServer().createInventory(null, 54, "§6Types de salles");
-
-        // Salles de trésor
-        ItemStack treasure = createGuiItem(Material.CHEST, "§6Salles de Trésor",
-                "§7Contiennent des coffres au trésor",
-                "§7Clic gauche: Moins (-1)",
-                "§7Clic droit: Plus (+1)",
-                "§7Actuel: " + getSessionValue(player, "treasureRooms", 3));
-        gui.setItem(10, treasure);
-
-        // Salles de combat
-        ItemStack combat = createGuiItem(Material.IRON_SWORD, "§cSalles de Combat",
-                "§7Pleines de monstres agressifs",
-                "§7Clic gauche: Moins (-1)",
-                "§7Clic droit: Plus (+1)",
-                "§7Actuel: " + getSessionValue(player, "combatRooms", 2));
-        gui.setItem(12, combat);
-
-        // Salles puzzle
-        ItemStack puzzle = createGuiItem(Material.REDSTONE, "§9Salles Puzzle",
-                "§7Énigmes et mécanismes",
-                "§7Clic gauche: Moins (-1)",
-                "§7Clic droit: Plus (+1)",
-                "§7Actuel: " + getSessionValue(player, "puzzleRooms", 1));
-        gui.setItem(14, puzzle);
-
-        // Salles boss
-        ItemStack boss = createGuiItem(Material.WITHER_SKELETON_SKULL, "§4Salles Boss",
-                "§7Boss finaux puissants",
-                "§7Maximum: 1 par donjon",
-                "§7Actuel: " + (getSessionValue(player, "bossRoom", 1) > 0 ? "Activé" : "Désactivé"));
-        gui.setItem(16, boss);
-
-        addNavigationItems(gui);
-        player.openInventory(gui);
-    }
-
-    private void showMonsterSelection(Player player) {
-        Inventory gui = plugin.getServer().createInventory(null, 54, "§6Types de monstres");
-
-        String[] monsters = {"ZOMBIE", "SKELETON", "SPIDER", "CREEPER", "WITCH", "VINDICATOR"};
-        String[] names = {"§2Zombies", "§7Squelettes", "§8Araignées", "§aCREEPER", "§5Sorcières", "§cVindicateurs"};
-        Material[] icons = {Material.ROTTEN_FLESH, Material.BONE, Material.SPIDER_EYE,
-                Material.GUNPOWDER, Material.POTION, Material.IRON_AXE};
-
-        for (int i = 0; i < monsters.length; i++) {
-            ItemStack item = createGuiItem(icons[i], names[i],
-                    "§7Type: " + monsters[i],
-                    "§7Clic pour activer/désactiver",
-                    "§7Statut: " + (isMonsterEnabled(player, monsters[i]) ? "§aActivé" : "§cDésactivé"));
-            gui.setItem(10 + i * 2, item);
-        }
-
-        addNavigationItems(gui);
-        player.openInventory(gui);
-    }
-
-    private void showTrapSelection(Player player) {
-        Inventory gui = plugin.getServer().createInventory(null, 45, "§6Configuration des pièges");
-
-        // Densité des pièges
-        ItemStack density = createGuiItem(Material.REDSTONE, "§cDensité des Pièges",
-                "§7Nombre de pièges dans le donjon",
-                "§7Clic gauche: Moins",
-                "§7Clic droit: Plus",
-                "§7Actuel: " + getTrapDensityName(getSessionValue(player, "trapDensity", 2)));
-        gui.setItem(20, density);
-
-        // Types de pièges activés
-        String[] trapTypes = {"Pression", "TNT", "Poison", "Téléportation", "Flèches"};
-        Material[] trapIcons = {Material.STONE_PRESSURE_PLATE, Material.TNT,
-                Material.SPIDER_EYE, Material.ENDER_PEARL, Material.ARROW};
-
-        for (int i = 0; i < trapTypes.length; i++) {
-            ItemStack item = createGuiItem(trapIcons[i], "§e" + trapTypes[i],
-                    "§7Clic pour activer/désactiver",
-                    "§7Statut: " + (isTrapEnabled(player, i) ? "§aActivé" : "§cDésactivé"));
-            gui.setItem(10 + i, item);
-        }
-
-        addNavigationItems(gui);
-        player.openInventory(gui);
-    }
-
-    private void showRewardSelection(Player player) {
-        Inventory gui = plugin.getServer().createInventory(null, 45, "§6Récompenses personnalisées");
-
-        // Qualité du loot
-        ItemStack quality = createGuiItem(Material.DIAMOND, "§bQualité du Loot",
-                "§7Détermine la rareté des objets",
-                "§7Clic gauche: Moins",
-                "§7Clic droit: Plus",
-                "§7Actuel: " + getLootQualityName(getSessionValue(player, "lootQuality", 2)));
-        gui.setItem(20, quality);
-
-        // Types de récompenses
-        String[] rewardTypes = {"Armes", "Armures", "Matériaux", "Nourriture", "Potions"};
-        Material[] rewardIcons = {Material.DIAMOND_SWORD, Material.DIAMOND_CHESTPLATE,
-                Material.DIAMOND, Material.GOLDEN_APPLE, Material.POTION};
-
-        for (int i = 0; i < rewardTypes.length; i++) {
-            ItemStack item = createGuiItem(rewardIcons[i], "§a" + rewardTypes[i],
-                    "§7Clic pour activer/désactiver",
-                    "§7Statut: " + (isRewardEnabled(player, i) ? "§aActivé" : "§cDésactivé"));
-            gui.setItem(10 + i, item);
-        }
-
-        addNavigationItems(gui);
-        player.openInventory(gui);
-    }
-
     private void showPreview(Player player) {
         WizardSession session = activeSessions.get(player.getUniqueId());
         if (session == null) return;
@@ -259,10 +136,6 @@ public class DungeonCreationWizard {
         player.sendMessage("§6Taille: §f" + session.getSize() + "x" + session.getSize());
         player.sendMessage("§6Thème: §f" + session.getTheme().getDisplayName());
         player.sendMessage("§6Difficulté: §f" + session.getDifficulty());
-        player.sendMessage("§6Salles de trésor: §f" + session.getTreasureRooms());
-        player.sendMessage("§6Salles de combat: §f" + session.getCombatRooms());
-        player.sendMessage("§6Salles puzzle: §f" + session.getPuzzleRooms());
-        player.sendMessage("§6Boss: §f" + (session.hasBossRoom() ? "Oui" : "Non"));
 
         player.sendMessage("");
         player.sendMessage("§aTapez §e'confirm' §apour créer le donjon");
@@ -311,7 +184,7 @@ public class DungeonCreationWizard {
                 if (message.equalsIgnoreCase("confirm")) {
                     createDungeon(player);
                 } else if (message.equalsIgnoreCase("back")) {
-                    showStep(player, WizardStep.REWARDS);
+                    showStep(player, WizardStep.DIFFICULTY);
                 }
                 break;
         }
@@ -328,12 +201,22 @@ public class DungeonCreationWizard {
         plugin.getDungeonManager().createCustomDungeon(player, template);
 
         activeSessions.remove(player.getUniqueId());
-        player.sendMessage(MessageUtils.getMessage("messages.wizard.dungeon-created", "{name}", session.getName()));
+        player.sendMessage("§aDonjon créé avec succès: " + session.getName());
     }
 
     public void cancelWizard(Player player) {
         activeSessions.remove(player.getUniqueId());
-        player.sendMessage(MessageUtils.getMessage("messages.wizard.cancelled"));
+        player.sendMessage("§7Assistant de création annulé.");
+    }
+
+    public void shutdown() {
+        for (UUID playerId : new HashSet<>(activeSessions.keySet())) {
+            Player player = plugin.getServer().getPlayer(playerId);
+            if (player != null) {
+                cancelWizard(player);
+            }
+        }
+        activeSessions.clear();
     }
 
     // Méthodes utilitaires
@@ -419,52 +302,11 @@ public class DungeonCreationWizard {
         }
     }
 
-    private int getSessionValue(Player player, String key, int defaultValue) {
-        WizardSession session = activeSessions.get(player.getUniqueId());
-        return session != null ? session.getValue(key, defaultValue) : defaultValue;
-    }
-
-    private String getTrapDensityName(int density) {
-        switch (density) {
-            case 1: return "Très peu";
-            case 2: return "Normal";
-            case 3: return "Beaucoup";
-            case 4: return "Extrême";
-            default: return "Normal";
-        }
-    }
-
-    private String getLootQualityName(int quality) {
-        switch (quality) {
-            case 1: return "Basique";
-            case 2: return "Normal";
-            case 3: return "Rare";
-            case 4: return "Épique";
-            case 5: return "Légendaire";
-            default: return "Normal";
-        }
-    }
-
-    private boolean isMonsterEnabled(Player player, String monster) {
-        WizardSession session = activeSessions.get(player.getUniqueId());
-        return session != null && session.isMonsterEnabled(monster);
-    }
-
-    private boolean isTrapEnabled(Player player, int trapIndex) {
-        WizardSession session = activeSessions.get(player.getUniqueId());
-        return session != null && session.isTrapEnabled(trapIndex);
-    }
-
-    private boolean isRewardEnabled(Player player, int rewardIndex) {
-        WizardSession session = activeSessions.get(player.getUniqueId());
-        return session != null && session.isRewardEnabled(rewardIndex);
-    }
-
     public WizardSession getSession(UUID playerId) {
         return activeSessions.get(playerId);
     }
 
     public enum WizardStep {
-        NAME, SIZE, THEME, DIFFICULTY, ROOMS, MONSTERS, TRAPS, REWARDS, PREVIEW, CONFIRM
+        NAME, SIZE, THEME, DIFFICULTY, PREVIEW, CONFIRM
     }
 }
