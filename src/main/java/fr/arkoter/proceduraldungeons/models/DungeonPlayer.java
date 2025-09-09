@@ -1,64 +1,169 @@
-package fr.arkoter.proceduraldungeons;
+package fr.arkoter.proceduraldungeons.models;
 
-import org.bukkit.configuration.file.FileConfiguration;
-import java.util.Random;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
-public class ConfigManager {
+import java.util.UUID;
 
-    private final ProceduralDungeons plugin;
-    private FileConfiguration config;
-    private final Random random;
+public class DungeonPlayer {
 
-    public ConfigManager(ProceduralDungeons plugin) {
-        this.plugin = plugin;
-        this.random = new Random();
+    private final UUID playerId;
+    private String currentDungeon;
+    private Location exitLocation;
+    private long enterTime;
+    private int monstersKilled;
+    private int treasuresFound;
+    private boolean hasBossKey;
+    private long completionTime;
+
+    public DungeonPlayer(UUID playerId) {
+        this.playerId = playerId;
+        this.currentDungeon = null;
+        this.exitLocation = null;
+        this.enterTime = 0;
+        this.monstersKilled = 0;
+        this.treasuresFound = 0;
+        this.hasBossKey = false;
+        this.completionTime = 0;
     }
 
-    public void loadConfig() {
-        config = plugin.getConfig();
-
-        // Valeurs par défaut
-        config.addDefault("dungeon.max-size", 100);
-        config.addDefault("dungeon.min-size", 30);
-        config.addDefault("dungeon.max-difficulty", 10);
-        config.addDefault("loot.diamond-chance", 20);
-        config.addDefault("loot.rare-item-chance", 15);
-        config.addDefault("boss.health-multiplier", 1.5);
-        config.addDefault("traps.damage", 2.0);
-
-        config.options().copyDefaults(true);
-        plugin.saveConfig();
+    public UUID getPlayerId() {
+        return playerId;
     }
 
-    public int getMaxDungeonSize() {
-        return config.getInt("dungeon.max-size", 100);
+    public String getCurrentDungeon() {
+        return currentDungeon;
     }
 
-    public int getMinDungeonSize() {
-        return config.getInt("dungeon.min-size", 30);
+    public void setCurrentDungeon(String currentDungeon) {
+        this.currentDungeon = currentDungeon;
     }
 
-    public int getMaxDifficulty() {
-        return config.getInt("dungeon.max-difficulty", 10);
+    public Location getExitLocation() {
+        return exitLocation != null ? exitLocation.clone() : null;
     }
 
-    public int getDiamondChance() {
-        return config.getInt("loot.diamond-chance", 20);
+    public void setExitLocation(Location exitLocation) {
+        this.exitLocation = exitLocation != null ? exitLocation.clone() : null;
     }
 
-    public int getRareItemChance() {
-        return config.getInt("loot.rare-item-chance", 15);
+    public long getEnterTime() {
+        return enterTime;
     }
 
-    public double getBossHealthMultiplier() {
-        return config.getDouble("boss.health-multiplier", 1.5);
+    public void setEnterTime(long enterTime) {
+        this.enterTime = enterTime;
     }
 
-    public double getTrapDamage() {
-        return config.getDouble("traps.damage", 2.0);
+    public int getMonstersKilled() {
+        return monstersKilled;
     }
 
-    public Random getRandom() {
-        return random;
+    public void setMonstersKilled(int monstersKilled) {
+        this.monstersKilled = monstersKilled;
+    }
+
+    public void incrementMonstersKilled() {
+        this.monstersKilled++;
+    }
+
+    public int getTreasuresFound() {
+        return treasuresFound;
+    }
+
+    public void setTreasuresFound(int treasuresFound) {
+        this.treasuresFound = treasuresFound;
+    }
+
+    public void incrementTreasuresFound() {
+        this.treasuresFound++;
+    }
+
+    public boolean hasBossKey() {
+        return hasBossKey;
+    }
+
+    public void setBossKey(boolean hasBossKey) {
+        this.hasBossKey = hasBossKey;
+    }
+
+    public long getCompletionTime() {
+        return completionTime;
+    }
+
+    public void setCompletionTime(long completionTime) {
+        this.completionTime = completionTime;
+    }
+
+    public boolean isInDungeon() {
+        return currentDungeon != null;
+    }
+
+    public void reset() {
+        this.currentDungeon = null;
+        this.exitLocation = null;
+        this.enterTime = 0;
+        this.monstersKilled = 0;
+        this.treasuresFound = 0;
+        this.hasBossKey = false;
+        this.completionTime = 0;
+    }
+
+    public long getTimeInDungeon() {
+        if (enterTime == 0) return 0;
+        return System.currentTimeMillis() - enterTime;
+    }
+
+    public String getFormattedTimeInDungeon() {
+        long timeMs = getTimeInDungeon();
+        long seconds = timeMs / 1000;
+        long minutes = seconds / 60;
+        seconds = seconds % 60;
+
+        if (minutes > 0) {
+            return minutes + "m " + seconds + "s";
+        } else {
+            return seconds + "s";
+        }
+    }
+
+    public String getFormattedCompletionTime() {
+        if (completionTime == 0) return "Non terminé";
+
+        long seconds = completionTime / 1000;
+        long minutes = seconds / 60;
+        seconds = seconds % 60;
+
+        if (minutes > 0) {
+            return minutes + "m " + seconds + "s";
+        } else {
+            return seconds + "s";
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        DungeonPlayer that = (DungeonPlayer) obj;
+        return playerId.equals(that.playerId);
+    }
+
+    @Override
+    public int hashCode() {
+        return playerId.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "DungeonPlayer{" +
+                "playerId=" + playerId +
+                ", currentDungeon='" + currentDungeon + '\'' +
+                ", timeInDungeon=" + getFormattedTimeInDungeon() +
+                ", monstersKilled=" + monstersKilled +
+                ", treasuresFound=" + treasuresFound +
+                ", hasBossKey=" + hasBossKey +
+                '}';
     }
 }
