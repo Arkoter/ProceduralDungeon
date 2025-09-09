@@ -1,137 +1,121 @@
-# Messages du plugin ProceduralDungeons
-# Utilisez & pour les codes couleur
-# Variables disponibles : {player}, {name}, {level}, {time}, etc.
+# Messages du plugin ProceduralDungeons v1.0.0
+# Développé par Arkoter
+#
+# Codes couleur supportés : & pour Minecraft, § pour formatage direct
+# Variables disponibles : {player}, {name}, {level}, {time}, {count}, etc.
+#
+# Structure des messages :
+# - messages.prefix : Préfixe global du plugin
+# - messages.général : Messages généraux d'erreur et de statut
+# - messages.help : Système d'aide des commandes
+# - messages.dungeon : Messages liés aux donjons (création, gestion, etc.)
+# - messages.wizard : Assistant de création guidée
+# - messages.boss : Messages relatifs aux boss
+# - messages.traps : Messages des pièges
+# - messages.treasure : Messages des trésors et récompenses
+# - messages.progress : Messages de progression et expérience
+# - messages.notifications : Notifications entre joueurs
+# - messages.stats : Statistiques et classements
+# - messages.error : Messages d'erreur spécifiques
 
 # ================================
-# MESSAGES GÉNÉRAUX
+# CONFIGURATION GLOBALE
 # ================================
 messages:
-  prefix: "&8[&6ProceduralDungeons&8]&r "
-  only-players: "&cCette commande ne peut être exécutée que par un joueur !"
-  no-permission: "&cVous n'avez pas la permission d'utiliser cette commande !"
-  config-reloaded: "&aConfiguration rechargée avec succès !"
-  plugin-reloaded: "&aPlugin rechargé avec succès !"
+  prefix: "&8[&6&lProceduralDungeons&8]&r "
 
   # ================================
-  # MESSAGES D'AIDE
+  # MESSAGES GÉNÉRAUX
+  # ================================
+  general:
+    only-players: "&cCette commande ne peut être exécutée que par un joueur connecté !"
+    no-permission: "&cVous n'avez pas la permission d'utiliser cette commande !"
+    invalid-arguments: "&cArguments invalides ! Utilisez &e/dungeon help &cpour voir l'aide."
+    player-not-found: "&cJoueur '{player}' introuvable ou hors ligne !"
+    config-reloaded: "&aConfiguration rechargée avec succès !"
+    plugin-reloaded: "&aPlugin ProceduralDungeons rechargé avec succès !"
+    feature-disabled: "&cCette fonctionnalité est actuellement désactivée."
+    maintenance-mode: "&cLe plugin est en mode maintenance. Réessayez plus tard."
+
+  # ================================
+  # SYSTÈME D'AIDE INTERACTIF
   # ================================
   help:
-    header: "&e=== &6Commandes ProceduralDungeons &e==="
-    create: "&a/dungeon create <nom> [taille] [difficulté] &7- Créer un donjon"
-    enter: "&a/dungeon enter <nom> &7- Entrer dans un donjon"
-    leave: "&a/dungeon leave &7- Quitter le donjon actuel"
-    list: "&a/dungeon list &7- Lister tous les donjons"
-    delete: "&a/dungeon delete <nom> &7- Supprimer un donjon"
-    info: "&a/dungeon info <nom> &7- Afficher les infos d'un donjon"
-    reload: "&a/dungeon reload &7- Recharger la configuration"
-    footer: "&e=================================="
+    header: "&e&l════ &6&lCommandes ProceduralDungeons &e&l════"
+    footer: "&e&l═════════════════════════════════════════════"
+    page-info: "&7Page {current}/{total} - Tapez &e/dungeon help {page} &7pour changer de page"
+
+    # Commandes de base (Page 1)
+    basic-commands:
+      create: "&a/dungeon create &e<nom> [taille] [difficulté] &7- Créer un donjon rapidement"
+      wizard: "&a/dungeon wizard &7- Assistant de création guidée étape par étape"
+      enter: "&a/dungeon enter &e<nom> &7- Entrer dans un donjon existant"
+      leave: "&a/dungeon leave &7- Quitter le donjon actuel"
+      list: "&a/dungeon list &7- Afficher tous les donjons disponibles"
+      info: "&a/dungeon info &e<nom> &7- Informations détaillées d'un donjon"
+
+    # Commandes avancées (Page 2)
+    advanced-commands:
+      template: "&a/dungeon template &e<nom> &7- Créer depuis un template prédéfini"
+      copy: "&a/dungeon copy &e<source> <nouveau> &7- Copier un donjon existant"
+      share: "&a/dungeon share &e<donjon> <joueur> &7- Partager avec un autre joueur"
+      preview: "&a/dungeon preview &e<nom> &7- Aperçu avant construction"
+      delete: "&a/dungeon delete &e<nom> &7- Supprimer un donjon"
+
+    # Commandes administrateur (Page 3)
+    admin-commands:
+      reload: "&c/dungeon reload &7- Recharger la configuration (admin)"
+      stats: "&c/dungeon stats &e[joueur] &7- Statistiques détaillées (admin)"
+      cleanup: "&c/dungeon cleanup &7- Nettoyer les anciens donjons (admin)"
+      backup: "&c/dungeon backup &7- Sauvegarder tous les donjons (admin)"
+
+    # Exemples et conseils
+    examples:
+      header: "&6&lExemples d'utilisation :"
+      create-basic: "&7» &e/dungeon create MonDonjon &7- Donjon standard 50x50"
+      create-custom: "&7» &e/dungeon create GrandDonjon 80 3 &7- Donjon 80x80, difficulté 3"
+      wizard-start: "&7» &e/dungeon wizard &7- Création guidée pour débutants"
+
+    tips:
+      header: "&b&lConseils :"
+      tip1: "&7• Utilisez l'assistant (&e/dungeon wizard&7) pour votre premier donjon"
+      tip2: "&7• Les donjons plus grands prennent plus de temps à générer"
+      tip3: "&7• La difficulté affecte les monstres, pièges et récompenses"
+      tip4: "&7• Vous pouvez partager vos créations avec d'autres joueurs"
 
   # ================================
-  # MESSAGES D'USAGE
+  # MESSAGES DE VALIDATION D'USAGE
   # ================================
   usage:
-    create: "&cUsage: /dungeon create <nom> [taille] [difficulté]"
-    enter: "&cUsage: /dungeon enter <nom>"
-    delete: "&cUsage: /dungeon delete <nom>"
-    info: "&cUsage: /dungeon info <nom>"
+    create: "&cUsage: &e/dungeon create <nom> [taille] [difficulté]"
+    enter: "&cUsage: &e/dungeon enter <nom>"
+    delete: "&cUsage: &e/dungeon delete <nom>"
+    info: "&cUsage: &e/dungeon info <nom>"
+    share: "&cUsage: &e/dungeon share <donjon> <joueur>"
+    copy: "&cUsage: &e/dungeon copy <source> <nouveau_nom>"
+    template: "&cUsage: &e/dungeon template <nom_template>"
+    preview: "&cUsage: &e/dungeon preview <nom>"
+    stats: "&cUsage: &e/dungeon stats [joueur]"
 
   # ================================
-  # MESSAGES DE DONJON
+  # GESTION DES DONJONS
   # ================================
   dungeon:
-    created: "&aDonjon '&e{name}&a' créé avec succès !"
-    creating: "&eGénération du donjon '&6{name}&e' en cours..."
-    generation-complete: "&aDonjon généré ! &7({time}ms)"
-    already-exists: "&cUn donjon avec ce nom existe déjà !"
-    not-found: "&cDonjon '&e{name}&c' introuvable !"
-    entered: "&aVous êtes entré dans le donjon '&e{name}&a' !"
-    left: "&aVous avez quitté le donjon !"
-    not-in-dungeon: "&cVous n'êtes dans aucun donjon !"
-    already-in-dungeon: "&cVous êtes déjà dans un donjon ! Tapez &e/dungeon leave &cpour en sortir."
-    deleted: "&aDonjon '&e{name}&a' supprimé avec succès !"
-    no-dungeons: "&cAucun donjon créé !"
-    difficulty-increased: "&6La difficulté du donjon a augmenté au niveau {level} !"
-    new-record: "&6&lNOUVEAU RECORD ! &eVous avez battu le record de vitesse !"
-    death-exit: "&cVous êtes mort dans le donjon et avez été éjecté !"
+    # Création et génération
+    created: "&a&l✓ &aDonjon '&e&l{name}&a' créé avec succès !"
+    creating: "&e&l⚙ &eGénération du donjon '&6&l{name}&e' en cours..."
+    generation-complete: "&a&l✅ &aDonjon généré avec succès ! &7(Temps: {time}ms)"
+    generation-failed: "&c&l✗ &cÉchec de la génération du donjon ! Réessayez."
 
-    # Statistiques de donjon
-    stats:
-      header: "&e=== &6Statistiques du donjon {name} &e==="
-      size: "&7Taille: &f{size}x{size} blocs"
-      difficulty: "&7Difficulté: &f{difficulty}/10"
-      active-players: "&7Joueurs actifs: &f{count}"
-      times-entered: "&7Fois entré: &f{count}"
-      times-completed: "&7Fois complété: &f{count}"
-      completion-rate: "&7Taux de réussite: &f{rate}%"
-      treasure-chests: "&7Coffres au trésor: &f{count}"
-      traps: "&7Pièges: &f{count}"
-      fastest-completion: "&7Record de vitesse: &f{time}"
-      created-date: "&7Créé le: &f{date}"
-      total-monsters-killed: "&7Monstres tués: &f{count}"
+    # Validation et erreurs de création
+    already-exists: "&c&l✗ &cUn donjon avec le nom '&e{name}&c' existe déjà !"
+    invalid-name: "&cNom de donjon invalide ! Utilisez uniquement des lettres, chiffres et '_'"
+    name-too-long: "&cLe nom du donjon est trop long ! Maximum 20 caractères."
+    name-too-short: "&cLe nom du donjon est trop court ! Minimum 3 caractères."
 
-  # ================================
-  # MESSAGES DE BOSS
-  # ================================
-  boss:
-    spawned: "&c⚡ &4Un boss redoutable est apparu !"
-    defeated: "&6✦ &eVous avez vaincu le boss du donjon &6{name} &e!"
-    key-required: "&cVous avez besoin d'une clé de boss pour accéder à cette salle !"
-    approaching: "&6⚠ &eVous approchez de la salle du boss..."
-
-  # ================================
-  # MESSAGES DE PIÈGES
-  # ================================
-  traps:
-    activated: "&c⚠ &4Vous avez activé un piège !"
-    poisoned: "&5☠ &dVous êtes empoisonné !"
-    teleported: "&d✦ &5Vous avez été téléporté aléatoirement !"
-    explosion: "&c💥 &4Une explosion retentit !"
-    arrows: "&7🏹 &fDes flèches sifflent autour de vous !"
-
-  # ================================
-  # MESSAGES DE TRÉSOR
-  # ================================
-  treasure:
-    found: "&a✦ &2Vous avez trouvé un coffre au trésor !"
-    key-obtained: "&6🗝 &eVous avez obtenu une clé de boss !"
-    rare-item: "&d✨ &5Vous avez trouvé un objet rare !"
-
-  # ================================
-  # MESSAGES DE PROGRESSION
-  # ================================
-  progress:
-    monster-killed: "&a+{exp} EXP &7| &eMonstre éliminé !"
-    treasure-opened: "&6+{exp} EXP &7| &eTrésor découvert !"
-    dungeon-completed: "&6&l+{exp} EXP &7| &eDonjon terminé !"
-
-  # ================================
-  # MESSAGES D'ERREUR
-  # ================================
-  error:
-    world-not-found: "&cMonde introuvable !"
-    invalid-location: "&cPosition invalide !"
-    generation-failed: "&cÉchec de la génération du donjon !"
-    save-failed: "&cÉchec de la sauvegarde !"
-    load-failed: "&cÉchec du chargement !"
-    max-dungeons-reached: "&cNombre maximum de donjons atteint ({max}) !"
-    dungeon-too-large: "&cLe donjon est trop grand ! Taille maximum: {max}"
-    dungeon-too-small: "&cLe donjon est trop petit ! Taille minimum: {min}"
-
-  # ================================
-  # MESSAGES DE NOTIFICATION
-  # ================================
-  notifications:
-    player-joined-dungeon: "&e{player} &7a rejoint le donjon !"
-    player-left-dungeon: "&e{player} &7a quitté le donjon !"
-    dungeon-empty: "&7Le donjon est maintenant vide."
-    auto-save: "&7Sauvegarde automatique effectuée."
-
-  # ================================
-  # MESSAGES DE TEMPS
-  # ================================
-  time:
-    seconds: "{time}s"
-    minutes: "{minutes}m {seconds}s"
-    hours: "{hours}h {minutes}m {seconds}s"
-    never: "Jamais"
-    unknown: "Inconnu"
+    # Accès aux donjons
+    not-found: "&c&l✗ &cDonjon '&e{name}&c' introuvable !"
+    entered: "&a&l➤ &aVous êtes entré dans le donjon '&e&l{name}&a' !"
+    left: "&7&l← &7Vous avez quitté le donjon."
+    not-in-dungeon: "&c&l✗ &cVous n'êtes dans aucun donjon !"
+    already-in-dungeon: "&c&l✗ &cVous êtes déjà dans un donjon ! Tapez &e/dungeon leave &cpour en sortir."

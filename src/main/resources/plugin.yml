@@ -5,6 +5,8 @@ api-version: 1.19
 author: Arkoter
 description: Plugin de génération procédurale de donjons avec labyrinthes, pièges et boss
 website: https://github.com/Arkoter/ProceduralDungeons
+prefix: ProcDungeons
+load: POSTWORLD
 depend: []
 softdepend: []
 
@@ -12,43 +14,123 @@ commands:
   dungeon:
     description: Commandes de gestion des donjons
     usage: |
-      /<command> help - Afficher l'aide
-      /<command> create <nom> [taille] [difficulté] - Créer un donjon
+      /<command> help - Afficher l'aide complète
+      /<command> wizard - Assistant de création guidé
+      /<command> create <nom> [taille] [difficulté] - Créer un donjon rapidement
       /<command> enter <nom> - Entrer dans un donjon
       /<command> leave - Quitter le donjon actuel
-      /<command> list - Lister tous les donjons
-      /<command> info <nom> - Afficher les informations d'un donjon
-      /<command> delete <nom> - Supprimer un donjon (admin)
-      /<command> reload - Recharger la configuration (admin)
+      /<command> list - Lister tous les donjons disponibles
+      /<command> info <nom> - Afficher les informations détaillées d'un donjon
+      /<command> delete <nom> - Supprimer un donjon (propriétaire/admin uniquement)
+      /<command> share <donjon> <joueur> - Partager un donjon avec un autre joueur
+      /<command> copy <source> <nouveau_nom> - Copier un donjon existant
+      /<command> preview <nom> - Aperçu du donjon avant construction
+      /<command> template <nom> - Créer depuis un template prédéfini
+      /<command> reload - Recharger la configuration (admin uniquement)
+      /<command> stats [joueur] - Voir les statistiques d'un joueur
     permission: proceduraldungeons.use
-    aliases: [pdungeon, pd]
+    aliases: [pdungeon, pd, dungeons]
 
 permissions:
+  # Permissions principales
   proceduraldungeons.*:
-    description: Toutes les permissions du plugin
+    description: Toutes les permissions du plugin ProceduralDungeons
     children:
       proceduraldungeons.use: true
       proceduraldungeons.create: true
       proceduraldungeons.enter: true
+      proceduraldungeons.wizard: true
+      proceduraldungeons.template: true
+      proceduraldungeons.share: true
+      proceduraldungeons.copy: true
+      proceduraldungeons.preview: true
       proceduraldungeons.admin: true
     default: op
 
+  # Permissions de base
   proceduraldungeons.use:
     description: Permet d'utiliser les commandes de base des donjons
     default: true
 
   proceduraldungeons.create:
-    description: Permet de créer des donjons
+    description: Permet de créer des donjons avec la commande /dungeon create
     default: true
 
   proceduraldungeons.enter:
     description: Permet d'entrer dans les donjons
     default: true
 
+  proceduraldungeons.leave:
+    description: Permet de quitter les donjons
+    default: true
+
+  # Permissions avancées
+  proceduraldungeons.wizard:
+    description: Permet d'utiliser l'assistant de création de donjon
+    default: true
+
+  proceduraldungeons.template:
+    description: Permet d'utiliser les templates de donjons prédéfinis
+    default: true
+
+  proceduraldungeons.share:
+    description: Permet de partager des donjons avec d'autres joueurs
+    default: true
+
+  proceduraldungeons.copy:
+    description: Permet de copier des donjons existants
+    default: true
+
+  proceduraldungeons.preview:
+    description: Permet de prévisualiser les donjons avant leur création
+    default: true
+
+  # Permissions d'administration
   proceduraldungeons.admin:
-    description: Permet d'administrer les donjons (supprimer, recharger config)
+    description: Permet d'administrer tous les donjons (supprimer, modifier, statistiques globales)
     default: op
     children:
       proceduraldungeons.use: true
       proceduraldungeons.create: true
       proceduraldungeons.enter: true
+      proceduraldungeons.wizard: true
+      proceduraldungeons.template: true
+      proceduraldungeons.share: true
+      proceduraldungeons.copy: true
+      proceduraldungeons.preview: true
+      proceduraldungeons.delete.others: true
+      proceduraldungeons.reload: true
+      proceduraldungeons.stats.others: true
+
+  proceduraldungeons.delete:
+    description: Permet de supprimer ses propres donjons
+    default: true
+
+  proceduraldungeons.delete.others:
+    description: Permet de supprimer les donjons d'autres joueurs
+    default: op
+
+  proceduraldungeons.reload:
+    description: Permet de recharger la configuration du plugin
+    default: op
+
+  proceduraldungeons.stats:
+    description: Permet de voir ses propres statistiques
+    default: true
+
+  proceduraldungeons.stats.others:
+    description: Permet de voir les statistiques d'autres joueurs
+    default: op
+
+  # Permissions de bypass
+  proceduraldungeons.bypass.limits:
+    description: Permet d'ignorer les limites de création de donjons
+    default: op
+
+  proceduraldungeons.bypass.cooldown:
+    description: Permet d'ignorer les temps de recharge
+    default: op
+
+  proceduraldungeons.bypass.cost:
+    description: Permet d'ignorer les coûts de création (si économie activée)
+    default: op
