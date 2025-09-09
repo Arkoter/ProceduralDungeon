@@ -1,266 +1,194 @@
-package fr.arkoter.proceduraldungeons.commands;
+package fr.arkoter.proceduraldungeons;
 
-import fr.arkoter.proceduraldungeons.ProceduralDungeons;
+import fr.arkoter.proceduraldungeons.commands.DungeonCommand;
+import fr.arkoter.proceduraldungeons.commands.DungeonTabCompleter;
+import fr.arkoter.proceduraldungeons.data.DungeonData;
+import fr.arkoter.proceduraldungeons.data.PlayerData;
+import fr.arkoter.proceduraldungeons.listeners.DungeonListener;
+import fr.arkoter.proceduraldungeons.listeners.EntityListener;
+import fr.arkoter.proceduraldungeons.listeners.PlayerListener;
+import fr.arkoter.proceduraldungeons.listeners.WizardListener;
+import fr.arkoter.proceduraldungeons.managers.ConfigManager;
+import fr.arkoter.proceduraldungeons.managers.DungeonCreationWizard;
+import fr.arkoter.proceduraldungeons.managers.DungeonManager;
+import fr.arkoter.proceduraldungeons.managers.TemplateManager;
+import fr.arkoter.proceduraldungeons.managers.PreviewManager;
 import fr.arkoter.proceduraldungeons.utils.MessageUtils;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
-public class DungeonCommand implements CommandExecutor {
+import java.io.File;
 
-    private final ProceduralDungeons plugin;
+public class ProceduralDungeons extends JavaPlugin {
 
-    public DungeonCommand(ProceduralDungeons plugin) {
-        this.plugin = plugin;
+    private DungeonManager dungeonManager;
+    private ConfigManager configManager;
+    private DungeonData dungeonData;
+    private PlayerData playerData;
+    private DungeonCreationWizard dungeonCreationWizard;
+    private TemplateManager templateManager;
+    private PreviewManager previewManager;
+    private BukkitTask autoSaveTask;
+
+    @Override
+    public void onEnable() {
+        getLogger().info("=== ProceduralDungeons v1.0.0 ===");
+        getLogger().info("Développé par Arkoter");
+        getLogger().info("Chargement du plugin...");
+
+        // Créer le dossier de données
+        if (!getDataFolder().exists()) {
+            getDataFolder().mkdirs();
+            getLogger().info("Dossier de données créé: " + getDataFolder().getPath());
+        }
+
+        // Initialisation des gestionnaires de configuration
+        getLogger().info("Chargement de la configuration...");
+        saveDefaultConfig();
+        configManager = new ConfigManager(this);
+
+        // Initialisation des gestionnaires de données
+        getLogger().info("Chargement des données...");
+        dungeonData = new DungeonData(this);
+        playerData = new PlayerData(this);
+
+        // Initialisation des gestionnaires principaux
+        getLogger().info("Initialisation des gestionnaires...");
+        dungeonManager = new DungeonManager(this);
+        dungeonCreationWizard = new DungeonCreationWizard(this);
+        templateManager = new TemplateManager(this);
+        previewManager = new PreviewManager(this);
+
+        // Charger les messages
+        getLogger().info("Chargement des messages...");
+        MessageUtils.loadMessages(new File(getDataFolder(), "messages.yml"));
+
+        // Enregistrement des événements
+        getLogger().info("Enregistrement des listeners...");
+        getServer().getPluginManager().registerEvents(new DungeonListener(this), this);
+        getServer().getPluginManager().registerEvents(new EntityListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
+        getServer().getPluginManager().registerEvents(new WizardListener(this), this);
+
+        // Enregistrement des commandes
+        getLogger().info("Enregistrement des commandes...");
+        DungeonCommand dungeonCommand = new DungeonCommand(this);
+        getCommand("dungeon").setExecutor(dungeonCommand);
+        getCommand("dungeon").setTabCompleter(new DungeonTabCompleter(this));
+
+        // Charger la configuration
+        configManager.loadConfig();
+
+        // Démarrer la sauvegarde automatique
+        startAutoSave();
+
+        getLogger().info("ProceduralDungeons activé avec succès !");
+        getLogger().info("Commandes disponibles: /dungeon help");
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage(MessageUtils.getMessage("messages.general.only-players"));
-            return true;
+    public void onDisable() {
+        getLogger().info("Désactivation de ProceduralDungeons...");
+
+        // Arrêter la sauvegarde automatique
+        if (autoSaveTask != null) {
+            autoSaveTask.cancel();
         }
 
-        Player player = (Player) sender;
-
-        if (args.length == 0) {
-            sendHelpMessage(player);
-            return true;
+        // Fermer tous les wizards actifs
+        if (dungeonCreationWizard != null) {
+            dungeonCreationWizard.shutdown();
         }
 
-        switch (args[0].toLowerCase()) {
-            case "help":
-                sendHelpMessage(player);
-                break;
-
-            case "wizard":
-                handleWizardCommand(player);
-                break;
-
-            case "create":
-                handleCreateCommand(player, args);
-                break;
-
-            case "enter":
-                handleEnterCommand(player, args);
-                break;
-
-            case "leave":
-                handleLeaveCommand(player);
-                break;
-
-            case "list":
-                handleListCommand(player);
-                break;
-
-            case "info":
-                handleInfoCommand(player, args);
-                break;
-
-            case "delete":
-                handleDeleteCommand(player, args);
-                break;
-
-            case "share":
-                handleShareCommand(player, args);
-                break;
-
-            case "copy":
-                handleCopyCommand(player, args);
-                break;
-
-            case "preview":
-                handlePreviewCommand(player, args);
-                break;
-
-            case "template":
-                handleTemplateCommand(player, args);
-                break;
-
-            case "reload":
-                handleReloadCommand(player);
-                break;
-
-            default:
-                player.sendMessage(MessageUtils.getMessage("messages.general.invalid-arguments"));
-                sendHelpMessage(player);
-                break;
+        // Sauvegarder et fermer tous les donjons
+        if (dungeonManager != null) {
+            dungeonManager.shutdown();
         }
 
-        return true;
+        getLogger().info("ProceduralDungeons désactivé avec succès !");
     }
 
-    private void sendHelpMessage(Player player) {
-        player.sendMessage("§e=== ProceduralDungeons - Aide ===");
-        player.sendMessage("§a/dungeon wizard §7- Assistant de création guidée");
-        player.sendMessage("§a/dungeon create <nom> [taille] [difficulté] §7- Créer un donjon");
-        player.sendMessage("§a/dungeon enter <nom> §7- Entrer dans un donjon");
-        player.sendMessage("§a/dungeon leave §7- Quitter le donjon actuel");
-        player.sendMessage("§a/dungeon list §7- Liste des donjons");
-        player.sendMessage("§a/dungeon info <nom> §7- Informations d'un donjon");
-        player.sendMessage("§a/dungeon delete <nom> §7- Supprimer un donjon");
-        player.sendMessage("§a/dungeon reload §7- Recharger la config");
+    public void reloadConfigs() {
+        getLogger().info("Rechargement de la configuration...");
+
+        // Recharger les configurations
+        reloadConfig();
+        configManager.loadConfig();
+
+        // Recharger les messages
+        MessageUtils.loadMessages(new File(getDataFolder(), "messages.yml"));
+
+        // Redémarrer la sauvegarde automatique
+        if (autoSaveTask != null) {
+            autoSaveTask.cancel();
+        }
+        startAutoSave();
+
+        getLogger().info("Configuration rechargée avec succès !");
     }
 
-    private void handleWizardCommand(Player player) {
-        if (!player.hasPermission("proceduraldungeons.wizard")) {
-            player.sendMessage(MessageUtils.getMessage("messages.general.no-permission"));
-            return;
-        }
+    private void startAutoSave() {
+        int interval = configManager.getAutoSaveInterval();
+        if (interval > 0) {
+            autoSaveTask = getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
+                if (dungeonManager != null) {
+                    dungeonManager.saveAllData();
+                    getLogger().info("Sauvegarde automatique effectuée");
+                }
+            }, interval * 20L, interval * 20L);
 
-        plugin.getDungeonCreationWizard().startWizard(player);
+            getLogger().info("Sauvegarde automatique activée (toutes les " + interval + " secondes)");
+        }
     }
 
-    private void handleCreateCommand(Player player, String[] args) {
-        if (!player.hasPermission("proceduraldungeons.create")) {
-            player.sendMessage(MessageUtils.getMessage("messages.general.no-permission"));
-            return;
-        }
+    // Getters pour tous les gestionnaires
 
-        if (args.length < 2) {
-            player.sendMessage(MessageUtils.getMessage("messages.usage.create"));
-            return;
-        }
-
-        String name = args[1];
-        int size = args.length > 2 ? parseIntSafe(args[2], 50) : 50;
-        int difficulty = args.length > 3 ? parseIntSafe(args[3], 1) : 1;
-
-        plugin.getDungeonManager().createDungeon(player, name, size, difficulty);
+    public DungeonManager getDungeonManager() {
+        return dungeonManager;
     }
 
-    private void handleEnterCommand(Player player, String[] args) {
-        if (!player.hasPermission("proceduraldungeons.enter")) {
-            player.sendMessage(MessageUtils.getMessage("messages.general.no-permission"));
-            return;
-        }
-
-        if (args.length < 2) {
-            player.sendMessage(MessageUtils.getMessage("messages.usage.enter"));
-            return;
-        }
-
-        plugin.getDungeonManager().enterDungeon(player, args[1]);
+    public ConfigManager getConfigManager() {
+        return configManager;
     }
 
-    private void handleLeaveCommand(Player player) {
-        if (!player.hasPermission("proceduraldungeons.leave")) {
-            player.sendMessage(MessageUtils.getMessage("messages.general.no-permission"));
-            return;
-        }
-
-        plugin.getDungeonManager().leaveDungeon(player);
+    public DungeonData getDungeonData() {
+        return dungeonData;
     }
 
-    private void handleListCommand(Player player) {
-        if (!player.hasPermission("proceduraldungeons.use")) {
-            player.sendMessage(MessageUtils.getMessage("messages.general.no-permission"));
-            return;
-        }
-
-        plugin.getDungeonManager().listDungeons(player);
+    public PlayerData getPlayerData() {
+        return playerData;
     }
 
-    private void handleInfoCommand(Player player, String[] args) {
-        if (!player.hasPermission("proceduraldungeons.use")) {
-            player.sendMessage(MessageUtils.getMessage("messages.general.no-permission"));
-            return;
-        }
-
-        if (args.length < 2) {
-            player.sendMessage(MessageUtils.getMessage("messages.usage.info"));
-            return;
-        }
-
-        plugin.getDungeonManager().showDungeonInfo(player, args[1]);
+    public DungeonCreationWizard getDungeonCreationWizard() {
+        return dungeonCreationWizard;
     }
 
-    private void handleDeleteCommand(Player player, String[] args) {
-        if (!player.hasPermission("proceduraldungeons.delete")) {
-            player.sendMessage(MessageUtils.getMessage("messages.general.no-permission"));
-            return;
-        }
-
-        if (args.length < 2) {
-            player.sendMessage(MessageUtils.getMessage("messages.usage.delete"));
-            return;
-        }
-
-        plugin.getDungeonManager().deleteDungeon(player, args[1]);
+    public TemplateManager getTemplateManager() {
+        return templateManager;
     }
 
-    private void handleShareCommand(Player player, String[] args) {
-        if (!player.hasPermission("proceduraldungeons.share")) {
-            player.sendMessage(MessageUtils.getMessage("messages.general.no-permission"));
-            return;
-        }
-
-        if (args.length < 3) {
-            player.sendMessage(MessageUtils.getMessage("messages.usage.share"));
-            return;
-        }
-
-        plugin.getDungeonManager().shareDungeon(player, args[1], args[2]);
+    public PreviewManager getPreviewManager() {
+        return previewManager;
     }
 
-    private void handleCopyCommand(Player player, String[] args) {
-        if (!player.hasPermission("proceduraldungeons.copy")) {
-            player.sendMessage(MessageUtils.getMessage("messages.general.no-permission"));
-            return;
-        }
+    // Méthodes utilitaires
 
-        if (args.length < 3) {
-            player.sendMessage(MessageUtils.getMessage("messages.usage.copy"));
-            return;
+    public void saveAllData() {
+        if (dungeonManager != null) {
+            dungeonManager.saveAllData();
         }
-
-        plugin.getDungeonManager().copyDungeon(player, args[1], args[2]);
     }
 
-    private void handlePreviewCommand(Player player, String[] args) {
-        if (!player.hasPermission("proceduraldungeons.preview")) {
-            player.sendMessage(MessageUtils.getMessage("messages.general.no-permission"));
-            return;
+    public void debug(String message) {
+        if (configManager != null && configManager.isDebugEnabled()) {
+            getLogger().info("[DEBUG] " + message);
         }
-
-        if (args.length < 2) {
-            player.sendMessage(MessageUtils.getMessage("messages.usage.preview"));
-            return;
-        }
-
-        player.sendMessage("§eAperçu du donjon: " + args[1] + " (fonctionnalité à venir)");
     }
 
-    private void handleTemplateCommand(Player player, String[] args) {
-        if (!player.hasPermission("proceduraldungeons.template")) {
-            player.sendMessage(MessageUtils.getMessage("messages.general.no-permission"));
-            return;
-        }
-
-        if (args.length < 2) {
-            player.sendMessage(MessageUtils.getMessage("messages.usage.template"));
-            return;
-        }
-
-        player.sendMessage("§eTemplate: " + args[1] + " (fonctionnalité à venir)");
-    }
-
-    private void handleReloadCommand(Player player) {
-        if (!player.hasPermission("proceduraldungeons.reload")) {
-            player.sendMessage(MessageUtils.getMessage("messages.general.no-permission"));
-            return;
-        }
-
-        plugin.reloadConfigs();
-        player.sendMessage(MessageUtils.getMessage("messages.general.config-reloaded"));
-    }
-
-    private int parseIntSafe(String str, int defaultValue) {
-        try {
-            return Integer.parseInt(str);
-        } catch (NumberFormatException e) {
-            return defaultValue;
+    public void logPerformance(String operation, long startTime) {
+        if (configManager != null && configManager.isShowPerformanceStats()) {
+            long duration = System.currentTimeMillis() - startTime;
+            getLogger().info("[PERF] " + operation + " completed in " + duration + "ms");
         }
     }
 }

@@ -215,16 +215,16 @@ public class DungeonManager {
         }
 
         // Ajouter des pièges selon la configuration
-        trapGenerator.generateCustomTraps(dungeon, template, maze);
+        trapGenerator.generateTraps(dungeon, maze);
 
         // Spawner les monstres sélectionnés
         spawnCustomMonsters(dungeon, template, maze);
     }
 
     private void buildMazeStructure(World world, Location center, boolean[][] maze, int size, DungeonTheme theme) {
-        Material floorMaterial = Material.valueOf(theme.getFloorMaterial().name());
-        Material wallMaterial = Material.valueOf(theme.getWallMaterial().name());
-        Material decorationMaterial = Material.valueOf(theme.getDecorationMaterial().name());
+        Material floorMaterial = theme.getFloorMaterial();
+        Material wallMaterial = theme.getWallMaterial();
+        Material decorationMaterial = theme.getDecorationMaterial();
 
         int wallHeight = plugin.getConfigManager().getWallHeight();
 
@@ -289,7 +289,7 @@ public class DungeonManager {
                         break;
 
                     case 1: // Salle de combat
-                        roomGenerator.generateCombatRoom(world, roomCenter, 6);
+                        generateCombatRoom(world, roomCenter, 6);
                         spawnRoomMonsters(world, roomCenter, dungeon.getDifficulty());
                         break;
 
@@ -309,7 +309,7 @@ public class DungeonManager {
         for (int i = 0; i < template.getTreasureRooms(); i++) {
             Location roomLoc = findValidRoomLocation(center, maze);
             if (roomLoc != null) {
-                List<Location> chests = roomGenerator.generateCustomTreasureRoom(world, roomLoc, 7, template);
+                List<Location> chests = roomGenerator.generateTreasureRoom(world, roomLoc, 7);
                 for (Location chestLoc : chests) {
                     dungeon.addTreasureChest(chestLoc);
                 }
@@ -320,7 +320,7 @@ public class DungeonManager {
         for (int i = 0; i < template.getCombatRooms(); i++) {
             Location roomLoc = findValidRoomLocation(center, maze);
             if (roomLoc != null) {
-                roomGenerator.generateCombatRoom(world, roomLoc, 6);
+                generateCombatRoom(world, roomLoc, 6);
                 spawnTemplateMonsters(world, roomLoc, template);
             }
         }
@@ -332,6 +332,34 @@ public class DungeonManager {
                 roomGenerator.generatePuzzleRoom(world, roomLoc, 5);
             }
         }
+    }
+
+    private void generateCombatRoom(World world, Location center, int size) {
+        // Générer une salle de combat basique
+        for (int x = -size/2; x <= size/2; x++) {
+            for (int z = -size/2; z <= size/2; z++) {
+                Location loc = center.clone().add(x, 0, z);
+
+                // Sol en pierre
+                world.getBlockAt(loc).setType(Material.STONE);
+
+                // Nettoyer l'air au-dessus
+                for (int y = 1; y <= 4; y++) {
+                    world.getBlockAt(loc.clone().add(0, y, 0)).setType(Material.AIR);
+                }
+
+                // Murs extérieurs
+                if (x == -size/2 || x == size/2 || z == -size/2 || z == size/2) {
+                    for (int y = 1; y <= 3; y++) {
+                        world.getBlockAt(loc.clone().add(0, y, 0)).setType(Material.COBBLESTONE);
+                    }
+                }
+            }
+        }
+
+        // Ajouter quelques torches
+        world.getBlockAt(center.clone().add(-size/2 + 1, 2, -size/2 + 1)).setType(Material.TORCH);
+        world.getBlockAt(center.clone().add(size/2 - 1, 2, size/2 - 1)).setType(Material.TORCH);
     }
 
     private Location findValidRoomLocation(Location center, boolean[][] maze) {
@@ -619,13 +647,13 @@ public class DungeonManager {
     public void shareDungeon(Player player, String dungeonName, String targetPlayerName) {
         if (!dungeonOwners.containsKey(dungeonName) ||
                 !dungeonOwners.get(dungeonName).equals(player.getUniqueId())) {
-            player.sendMessage(MessageUtils.getMessage("messages.dungeon.not-owner"));
+            player.sendMessage("§cVous n'êtes pas le propriétaire de ce donjon !");
             return;
         }
 
         Player targetPlayer = plugin.getServer().getPlayer(targetPlayerName);
         if (targetPlayer == null) {
-            player.sendMessage(MessageUtils.getMessage("messages.error.player-not-found"));
+            player.sendMessage("§cJoueur introuvable ou hors ligne !");
             return;
         }
 
@@ -719,7 +747,7 @@ public class DungeonManager {
         UUID owner = dungeonOwners.get(name);
         if (owner != null && !owner.equals(player.getUniqueId()) &&
                 !player.hasPermission("proceduraldungeons.admin")) {
-            player.sendMessage(MessageUtils.getMessage("messages.dungeon.not-owner"));
+            player.sendMessage("§cVous n'êtes pas le propriétaire de ce donjon !");
             return;
         }
 

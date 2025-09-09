@@ -67,22 +67,6 @@ public class WizardListener implements Listener {
                 handleDifficultySelection(player, session, itemName);
                 break;
 
-            case ROOMS:
-                handleRoomSelection(player, session, itemName, event.isRightClick());
-                break;
-
-            case MONSTERS:
-                handleMonsterSelection(player, session, event.getSlot());
-                break;
-
-            case TRAPS:
-                handleTrapSelection(player, session, itemName, event.isRightClick());
-                break;
-
-            case REWARDS:
-                handleRewardSelection(player, session, event.getSlot(), event.isRightClick());
-                break;
-
             case CONFIRM:
                 handleConfirmation(player, session, itemName);
                 break;
@@ -131,67 +115,10 @@ public class WizardListener implements Listener {
         for (int i = 1; i <= 5; i++) {
             if (itemName.contains("Difficulté " + i)) {
                 session.setDifficulty(i);
-                plugin.getDungeonCreationWizard().showStep(player, DungeonCreationWizard.WizardStep.ROOMS);
+                plugin.getDungeonCreationWizard().showStep(player, DungeonCreationWizard.WizardStep.PREVIEW);
                 break;
             }
         }
-    }
-
-    private void handleRoomSelection(Player player, WizardSession session, String itemName, boolean rightClick) {
-        int change = rightClick ? 1 : -1;
-
-        if (itemName.contains("Trésor")) {
-            session.setTreasureRooms(session.getTreasureRooms() + change);
-        } else if (itemName.contains("Combat")) {
-            session.setCombatRooms(session.getCombatRooms() + change);
-        } else if (itemName.contains("Puzzle")) {
-            session.setPuzzleRooms(session.getPuzzleRooms() + change);
-        } else if (itemName.contains("Boss")) {
-            session.setBossRoom(!session.hasBossRoom());
-        }
-
-        // Rafraîchir l'affichage
-        plugin.getDungeonCreationWizard().showStep(player, DungeonCreationWizard.WizardStep.ROOMS);
-    }
-
-    private void handleMonsterSelection(Player player, WizardSession session, int slot) {
-        String[] monsters = {"ZOMBIE", "SKELETON", "SPIDER", "CREEPER", "WITCH", "VINDICATOR"};
-        int monsterIndex = (slot - 10) / 2;
-
-        if (monsterIndex >= 0 && monsterIndex < monsters.length) {
-            session.toggleMonster(monsters[monsterIndex]);
-            plugin.getDungeonCreationWizard().showStep(player, DungeonCreationWizard.WizardStep.MONSTERS);
-        }
-    }
-
-    private void handleTrapSelection(Player player, WizardSession session, String itemName, boolean rightClick) {
-        if (itemName.contains("Densité")) {
-            int change = rightClick ? 1 : -1;
-            session.setTrapDensity(session.getTrapDensity() + change);
-        } else {
-            // Toggle individual traps
-            for (int i = 0; i < 5; i++) {
-                String[] trapNames = {"Pression", "TNT", "Poison", "Téléportation", "Flèches"};
-                if (itemName.contains(trapNames[i])) {
-                    session.toggleTrap(i);
-                    break;
-                }
-            }
-        }
-
-        plugin.getDungeonCreationWizard().showStep(player, DungeonCreationWizard.WizardStep.TRAPS);
-    }
-
-    private void handleRewardSelection(Player player, WizardSession session, int slot, boolean rightClick) {
-        if (slot == 20) { // Quality selector
-            int change = rightClick ? 1 : -1;
-            session.setLootQuality(session.getLootQuality() + change);
-        } else if (slot >= 10 && slot <= 14) {
-            // Toggle reward types
-            session.toggleReward(slot - 10);
-        }
-
-        plugin.getDungeonCreationWizard().showStep(player, DungeonCreationWizard.WizardStep.REWARDS);
     }
 
     private void handleConfirmation(Player player, WizardSession session, String itemName) {
@@ -229,11 +156,7 @@ public class WizardListener implements Listener {
             case SIZE: return DungeonCreationWizard.WizardStep.NAME;
             case THEME: return DungeonCreationWizard.WizardStep.SIZE;
             case DIFFICULTY: return DungeonCreationWizard.WizardStep.THEME;
-            case ROOMS: return DungeonCreationWizard.WizardStep.DIFFICULTY;
-            case MONSTERS: return DungeonCreationWizard.WizardStep.ROOMS;
-            case TRAPS: return DungeonCreationWizard.WizardStep.MONSTERS;
-            case REWARDS: return DungeonCreationWizard.WizardStep.TRAPS;
-            case PREVIEW: return DungeonCreationWizard.WizardStep.REWARDS;
+            case PREVIEW: return DungeonCreationWizard.WizardStep.DIFFICULTY;
             case CONFIRM: return DungeonCreationWizard.WizardStep.PREVIEW;
             default: return null;
         }
@@ -244,11 +167,7 @@ public class WizardListener implements Listener {
             case NAME: return DungeonCreationWizard.WizardStep.SIZE;
             case SIZE: return DungeonCreationWizard.WizardStep.THEME;
             case THEME: return DungeonCreationWizard.WizardStep.DIFFICULTY;
-            case DIFFICULTY: return DungeonCreationWizard.WizardStep.ROOMS;
-            case ROOMS: return DungeonCreationWizard.WizardStep.MONSTERS;
-            case MONSTERS: return DungeonCreationWizard.WizardStep.TRAPS;
-            case TRAPS: return DungeonCreationWizard.WizardStep.REWARDS;
-            case REWARDS: return DungeonCreationWizard.WizardStep.PREVIEW;
+            case DIFFICULTY: return DungeonCreationWizard.WizardStep.PREVIEW;
             case PREVIEW: return DungeonCreationWizard.WizardStep.CONFIRM;
             default: return null;
         }
